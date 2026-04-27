@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { Plus, Trash2, Activity, TrendingUp } from 'lucide-react'
+import { Plus, Trash2, Activity, TrendingUp, Loader2 } from 'lucide-react'
+import { useSlip } from '../context/SlipContext'
 
 const MARKETS   = ['PTS','REB','AST','Pts+Reb+Ast','3PM','STL','BLK']
 const DIRECTIONS = ['Over','Under']
@@ -71,19 +72,72 @@ function ResultPanel({ legs, payout }) {
 }
 
 export default function Lineup() {
+  const { slip } = useSlip()
   const [platform, setPlatform] = useState('Pick6')
   const [payout,   setPayout]   = useState('24')
   const [legs, setLegs]         = useState([{player:'',market:'Pts+Reb+Ast',direction:'Under',line:'0'}])
   const [analyzed, setAnalyzed] = useState(false)
+  const [isAnalyzing, setIsAnalyzing] = useState(false)
 
-  const addLeg    = () => { if(legs.length<6) setLegs([...legs,{player:'',market:'PTS',direction:'Under',line:'0'}]) }
-  const removeLeg = i  => setLegs(legs.filter((_,idx)=>idx!==i))
-  const updateLeg = (i,f,v) => { const u=[...legs]; u[i]={...u[i],[f]:v}; setLegs(u) }
+  const addLeg    = () => { if(legs.length<6) { setLegs([...legs,{player:'',market:'PTS',direction:'Under',line:'0'}]); setAnalyzed(false); } }
+  const removeLeg = i  => { setLegs(legs.filter((_,idx)=>idx!==i)); setAnalyzed(false); }
+  const updateLeg = (i,f,v) => { const u=[...legs]; u[i]={...u[i],[f]:v}; setLegs(u); setAnalyzed(false); }
+
+  const runAnalysis = () => {
+    if (legs.length < 2) return alert("Please add at least 2 legs for DFS analysis.")
+    setIsAnalyzing(true)
+    setTimeout(() => {
+      setIsAnalyzing(false)
+      setAnalyzed(true)
+    }, 1500)
+  }
+
+  const fillDemo = () => {
+    setLegs([
+      {player:'LeBron James', market:'PTS', direction:'Over', line:'24.5'},
+      {player:'Kevin Durant', market:'REB', direction:'Under', line:'7.5'},
+      {player:'Stephen Curry', market:'3PM', direction:'Over', line:'4.5'}
+    ])
+    setAnalyzed(false)
+  }
+
+  const importFromSlip = () => {
+    if (slip.length === 0) return
+    const newLegs = slip.map(p => ({
+      player: p.player,
+      market: p.market,
+      direction: p.side,
+      line: p.line.toString()
+    })).slice(0, 6)
+    setLegs(newLegs)
+    setAnalyzed(false)
+  }
 
   return (
     <div className="anim-fade">
-      <h1 className="page-title">Lineup Analyzer</h1>
-      <p className="page-sub" style={{marginBottom:24}}>Enter your DFS picks to see per-leg hit probability, joint odds, and EV.</p>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12 }}>
+        <div>
+          <h1 className="page-title">Lineup Analyzer</h1>
+          <p className="page-sub" style={{marginBottom:24}}>Enter your DFS picks to see per-leg hit probability, joint odds, and EV.</p>
+        </div>
+        <div style={{ display: 'flex', gap: 10 }}>
+          <button onClick={fillDemo} className="btn-ghost" style={{ fontSize: 11, padding: '10px 16px', borderRadius: 10 }}>
+            FILL DEMO
+          </button>
+          {slip.length > 0 && (
+            <button 
+              onClick={importFromSlip}
+              className="btn-ghost" 
+              style={{ 
+                borderColor: 'var(--green)', color: 'var(--green)', background: 'var(--green-dim)',
+                fontSize: 12, padding: '10px 16px', borderRadius: 10
+              }}
+            >
+               IMPORT SLIP ({slip.length})
+            </button>
+          )}
+        </div>
+      </div>
 
       <div className="grid-2" style={{alignItems:'start'}}>
         {/* Builder */}
@@ -140,13 +194,18 @@ export default function Lineup() {
             <Plus size={13}/> Add Leg (max 6)
           </button>
 
-          <button onClick={()=>setAnalyzed(true)} className="btn-primary" style={{width:'100%',justifyContent:'center',padding:'12px',fontSize:13}}>
-            <TrendingUp size={14}/> Analyze Lineup
+          <button 
+            onClick={runAnalysis} 
+            disabled={isAnalyzing}
+            className="btn-primary" 
+            style={{width:'100%',justifyContent:'center',padding:'12px',fontSize:13, background: isAnalyzing ? 'var(--bg-secondary)' : 'var(--blue)', color: isAnalyzing ? 'var(--blue)' : '#000'}}
+          >
+            {isAnalyzing ? <><Loader2 size={14} className="animate-spin" /> Analyzing...</> : <><TrendingUp size={14}/> Analyze Lineup</>}
           </button>
         </div>
 
         {/* Results */}
-        <ResultPanel legs={analyzed?legs:[]} payout={payout}/>
+        <ResultPanel legs={analyzed && !isAnalyzing ? legs : []} payout={payout}/>
       </div>
     </div>
   )

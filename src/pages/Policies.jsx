@@ -2,19 +2,54 @@ import React from 'react'
 import { POLICIES } from '../lib/data.js'
 
 export default function Policies() {
+  const [isClearing, setIsClearing] = React.useState(false)
+  const [lastUpdate, setLastUpdate] = React.useState('4/25/2026, 3:26:15 PM')
+  const [toast, setToast] = React.useState(null)
+
+  const invalidateCache = () => {
+    setIsClearing(true)
+    setTimeout(() => {
+      setIsClearing(false)
+      setLastUpdate(new Date().toLocaleString())
+      setToast('System Cache Invalidated Successfully')
+      setTimeout(() => setToast(null), 3000)
+    }, 1500)
+  }
+
   return (
     <div className="anim-fade" style={{display:'flex',flexDirection:'column',gap:20}}>
+      
+      {toast && (
+        <div style={{ 
+          position:'fixed', top: 30, right: 30, zIndex: 99999, 
+          background: '#0F172A', border: '1px solid var(--blue)', 
+          color: 'var(--blue)', padding: '16px 24px', borderRadius: 16, 
+          display: 'flex', alignItems: 'center', gap: 12, 
+          boxShadow: '0 10px 40px rgba(0,0,0,0.5)', 
+          animation: 'slide-in-right 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)' 
+        }}>
+          <span style={{ fontSize: 14, fontWeight: 800 }}>{toast}</span>
+        </div>
+      )}
+
       <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',flexWrap:'wrap',gap:12}}>
         <div>
           <h1 className="page-title">Pick Policies</h1>
-          <p className="page-sub">As of 4/25/2026, 3:26:15 PM · 8 active policies</p>
+          <p className="page-sub">As of {lastUpdate} · 8 active policies</p>
         </div>
         <div style={{display:'flex',gap:8,alignItems:'center'}}>
           <label style={{display:'flex',alignItems:'center',gap:6,fontSize:12,color:'var(--text-secondary)',cursor:'pointer'}}>
-            <input type="checkbox" style={{accentColor:'var(--accent-blue)'}}/>
+            <input type="checkbox" style={{accentColor:'var(--accent-blue)'}} defaultChecked />
             Auto-refresh (30s)
           </label>
-          <button className="btn-primary" style={{fontSize:12,padding:'7px 14px'}}>Invalidate cache</button>
+          <button 
+            onClick={invalidateCache}
+            disabled={isClearing}
+            className="btn-primary" 
+            style={{fontSize:12,padding:'10px 16px', borderRadius: 10, background: isClearing ? 'var(--bg-secondary)' : 'var(--blue)', color: isClearing ? 'var(--blue)' : '#000'}}
+          >
+            {isClearing ? 'Clearing Cache...' : 'Invalidate cache'}
+          </button>
         </div>
       </div>
 

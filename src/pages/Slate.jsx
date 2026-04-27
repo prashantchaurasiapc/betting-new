@@ -186,6 +186,17 @@ function GameCard({ game }) {
 
 export default function Slate() {
   const s = SLATE_STATS
+  const [filter, setFilter] = useState('All Games')
+
+  const filteredGames = GAMES.filter(game => {
+    if (filter === 'All Games') return true
+    if (filter === 'Best Bets') return !!game.bestBet
+    if (filter === 'High Edge') return Math.abs(game.modelHomeWin - game.vegasHomeWin) >= 4
+    if (filter === 'Late Slate') return game.time.includes('9:') || game.time.includes('10:')
+    if (filter === 'Injuries') return game.injuries.home.length > 0 || game.injuries.away.length > 0
+    return true
+  })
+
   return (
     <div className="anim-fade">
       {/* Page header */}
@@ -219,14 +230,26 @@ export default function Slate() {
 
       {/* Action filter bar */}
       <div style={{ display:'flex', flexWrap:'wrap', gap:8, marginBottom:20, paddingBottom:14, borderBottom:'1px solid var(--border)' }}>
-        {['All Games','Best Bets','High Edge','Late Slate','Injuries'].map((btn, i) => (
-          <button key={btn} className={`chip-btn${i===0?' active':''}`}>{btn}</button>
+        {['All Games','Best Bets','High Edge','Late Slate','Injuries'].map((btn) => (
+          <button 
+            key={btn} 
+            onClick={() => setFilter(btn)}
+            className={`chip-btn${filter === btn ? ' active' : ''}`}
+          >
+            {btn}
+          </button>
         ))}
       </div>
 
       {/* Game cards */}
       <div style={{ display:'flex', flexDirection:'column', gap:14 }}>
-        {GAMES.map(game => <GameCard key={game.id} game={game} />)}
+        {filteredGames.length > 0 ? (
+          filteredGames.map(game => <GameCard key={game.id} game={game} />)
+        ) : (
+          <div className="card" style={{ padding: 40, textAlign: 'center', color: 'var(--text-muted)' }}>
+            No games match the "{filter}" criteria.
+          </div>
+        )}
       </div>
     </div>
   )

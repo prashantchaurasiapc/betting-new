@@ -1,6 +1,6 @@
 import React, { Suspense, lazy } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Navbar from './components/Navbar.jsx'
+import Navbar from './components/layout/Navbar.jsx'
 
 // Lazy load pages for better build performance
 const Slate = lazy(() => import('./pages/Slate.jsx'))
