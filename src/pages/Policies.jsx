@@ -21,7 +21,7 @@ export default function Policies() {
       
       {toast && (
         <div style={{ 
-          position:'fixed', top: 30, right: 30, zIndex: 99999, 
+          position:'fixed', top: 100, right: 30, zIndex: 10000000, 
           background: '#0F172A', border: '1px solid var(--blue)', 
           color: 'var(--blue)', padding: '16px 24px', borderRadius: 16, 
           display: 'flex', alignItems: 'center', gap: 12, 

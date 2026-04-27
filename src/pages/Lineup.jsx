@@ -78,17 +78,24 @@ export default function Lineup() {
   const [legs, setLegs]         = useState([{player:'',market:'Pts+Reb+Ast',direction:'Under',line:'0'}])
   const [analyzed, setAnalyzed] = useState(false)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
+  const [toast, setToast] = useState(null)
+
+  const showToast = (msg) => {
+    setToast(msg)
+    setTimeout(() => setToast(null), 3000)
+  }
 
   const addLeg    = () => { if(legs.length<6) { setLegs([...legs,{player:'',market:'PTS',direction:'Under',line:'0'}]); setAnalyzed(false); } }
   const removeLeg = i  => { setLegs(legs.filter((_,idx)=>idx!==i)); setAnalyzed(false); }
   const updateLeg = (i,f,v) => { const u=[...legs]; u[i]={...u[i],[f]:v}; setLegs(u); setAnalyzed(false); }
 
   const runAnalysis = () => {
-    if (legs.length < 2) return alert("Please add at least 2 legs for DFS analysis.")
+    if (legs.length < 2) return showToast("Add at least 2 legs for analysis")
     setIsAnalyzing(true)
     setTimeout(() => {
       setIsAnalyzing(false)
       setAnalyzed(true)
+      showToast("Lineup Analysis Complete")
     }, 1500)
   }
 
@@ -99,6 +106,7 @@ export default function Lineup() {
       {player:'Stephen Curry', market:'3PM', direction:'Over', line:'4.5'}
     ])
     setAnalyzed(false)
+    showToast("Demo lineup loaded")
   }
 
   const importFromSlip = () => {

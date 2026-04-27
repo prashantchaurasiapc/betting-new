@@ -102,44 +102,67 @@ export default function PropsTable({ data, onSelectPick, selectedPickId }) {
             <th className="hide-mobile">Align</th>
             <th className="hide-mobile">Trend</th>
             <th className="hide-mobile">Diff</th>
-            <th className="hide-mobile">Conf</th>
+            <th>Conf</th>
           </tr></thead>
           <tbody>
-            {filtered.map((p,i)=>(
-              <tr 
-                key={p.id} 
-                onClick={() => onSelectPick(p)}
-                style={{ cursor: 'pointer', transition: 'background 0.2s', background: selectedPickId === p.id ? 'var(--bg-elevated)' : 'transparent' }}
-              >
-                <td style={{color:'var(--text-muted)',fontSize:11}}>{i+1}</td>
-                <td>
-                  <div style={{display:'flex',alignItems:'center',gap:8}}>
-                    <div style={{width:30,height:30,borderRadius:'50%',background:'linear-gradient(135deg,#1e3a5f,#3b82f6)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:10,fontWeight:900,color:'#fff',flexShrink:0}}>
-                      {p.player.split(' ').map(w=>w[0]).join('').slice(0,2)}
+              {filtered.map((p,i)=>(
+                <tr 
+                  key={p.id} 
+                  onClick={() => onSelectPick(p)}
+                  style={{ cursor: 'pointer', transition: 'background 0.2s', background: selectedPickId === p.id ? 'var(--bg-elevated)' : 'transparent' }}
+                >
+                  <td style={{color:'var(--text-muted)',fontSize:11}}>{i+1}</td>
+                  <td>
+                    <div style={{display:'flex',alignItems:'center',gap:8}}>
+                      <div style={{width:32,height:32,borderRadius:10,background:'linear-gradient(135deg,#1e3a5f,#3b82f6)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:10,fontWeight:900,color:'#fff',flexShrink:0,border:'1px solid rgba(255,255,255,0.1)'}}>
+                        {p.player.split(' ').map(w=>w[0]).join('').slice(0,2)}
+                      </div>
+                      <div>
+                        <div style={{display:'flex',alignItems:'center',gap:6}}>
+                          <p style={{fontSize:12,fontWeight:700,color:'var(--text-primary)',whiteSpace:'nowrap'}}>{p.player}</p>
+                          {p.edge > 10 && <span title="High Edge" style={{color:'var(--accent-gold)',fontSize:10}}>🔥</span>}
+                          {p.sharp === 'Sharp' && <span title="Sharp Signal" style={{color:'var(--blue)',fontSize:10}}>⚡</span>}
+                        </div>
+                        <p style={{fontSize:10,color:'var(--text-muted)',lineHeight:1.2,marginTop:2}}>
+                          <span style={{color:'var(--blue)',fontWeight:700}}>WHY:</span> {p.market} mismatch vs {p.team} defense
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <p style={{fontSize:12,fontWeight:600,color:'var(--text-primary)',whiteSpace:'nowrap'}}>{p.player}</p>
-                      <p style={{fontSize:11,color:'var(--text-muted)'}}>{p.team}</p>
+                  </td>
+                  <td className="hide-mobile" style={{fontSize:11,color:'var(--text-muted)'}}>{p.matchup}</td>
+                  <td><span className="chip chip-market">{p.market}</span></td>
+                  <td>
+                    <span className={`badge ${p.side==='OVER'?'badge-over':'badge-under'}`}>{p.side}</span>
+                  </td>
+                  <td className="mono-text" style={{fontWeight:600,color:'var(--text-primary)'}}>{p.line}</td>
+                  <td className="mono-text" style={{fontWeight:800,color:p.edge<0?'var(--accent-red)':'var(--accent-green)'}}>{p.edge.toFixed(1)}%</td>
+                  <td className="mono-text" style={{fontWeight:800,color:'var(--blue)'}}>{p.score.toFixed(3)}</td>
+                  <td className="hide-mobile mono-text" style={{fontSize:11,color:'var(--text-secondary)'}}>{p.move}</td>
+                  <td className="hide-mobile">
+                    <div style={{display:'flex',flexDirection:'column',gap:4}}>
+                       <span className={`chip ${p.sharp==='Sharp'?'chip-sharp':'chip-drift'}`}>{p.sharp}</span>
+                       <span style={{fontSize:9,color:'var(--text-muted)',textAlign:'center'}}>{p.align}</span>
                     </div>
-                    <Star size={11} className="hide-mobile" style={{color:'var(--text-muted)',cursor:'pointer',flexShrink:0}}/>
-                  </div>
-                </td>
-                <td className="hide-mobile" style={{fontSize:11,color:'var(--text-muted)'}}>{p.matchup}</td>
-                <td><span className="chip chip-market">{p.market}</span></td>
-                <td>
-                  <span className={`badge ${p.side==='OVER'?'badge-over':'badge-under'}`}>{p.side}</span>
-                </td>
-                <td className="mono-text" style={{fontWeight:600,color:'var(--text-primary)'}}>{p.line}</td>
-                <td className="mono-text" style={{fontWeight:700,color:p.edge<0?'var(--accent-red)':'var(--accent-green)'}}>{p.edge.toFixed(1)}</td>
-                <td className="mono-text" style={{fontWeight:700,color:'var(--blue)'}}>{p.score.toFixed(3)}</td>
-                <td className="hide-mobile mono-text" style={{fontSize:11,color:'var(--text-secondary)'}}>{p.move}</td>
-                <td className="hide-mobile"><span className={`chip ${p.sharp==='Sharp'?'chip-sharp':'chip-drift'}`}>{p.sharp}</span></td>
-                <td className="hide-mobile"><span className={`chip ${p.align==='AGAINST'?'chip-against':p.align==='WITH'?'chip-with':'chip-neutral'}`}>{p.align}</span></td>
-                <td className="hide-mobile"><Sparkline data={p.trend}/></td>
-                <td className="hide-mobile"><span className={`chip ${p.difficulty==='HOSTILE'?'chip-hostile':p.difficulty==='TOUGH'?'chip-tough':'chip-favorable'}`}>{p.difficulty}</span></td>
-                <td className="hide-mobile"><ConfBadge conf={p.confidence}/></td>
-              </tr>
-            ))}
+                  </td>
+                  <td className="hide-mobile">
+                    <div style={{display:'flex',flexDirection:'column',gap:4,alignItems:'center'}}>
+                      <Sparkline data={p.trend}/>
+                      <div style={{display:'flex',gap:3}}>
+                        {p.trend.slice(-5).map((v,idx) => (
+                          <div key={idx} style={{width:4,height:4,borderRadius:'50%',background: p.side==='UNDER' ? (v < p.line ? 'var(--green)':'var(--error)') : (v > p.line ? 'var(--green)':'var(--error)')}} />
+                        ))}
+                      </div>
+                    </div>
+                  </td>
+                  <td className="hide-mobile">
+                    <div style={{display:'flex',flexDirection:'column',gap:2,alignItems:'center'}}>
+                      <span className={`chip ${p.difficulty==='HOSTILE'?'chip-hostile':p.difficulty==='TOUGH'?'chip-tough':'chip-favorable'}`}>{p.difficulty}</span>
+                      <span style={{fontSize:8,color:'var(--text-muted)',fontWeight:700}}>RISK: {p.difficulty==='HOSTILE'?'HIGH':'MED'}</span>
+                    </div>
+                  </td>
+                  <td><ConfBadge conf={p.confidence}/></td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>
