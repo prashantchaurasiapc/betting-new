@@ -1,13 +1,15 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import { NAV_ITEMS } from '../../lib/data.js'
-import { Zap, Moon, Menu, X } from 'lucide-react'
+import { Zap, Moon, Sun, Menu, X } from 'lucide-react'
 
 import { useSlip } from '../../context/SlipContext'
+import { useTheme } from '../../context/ThemeContext'
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = React.useState(false)
   const { slip } = useSlip()
+  const { theme, toggleTheme } = useTheme()
 
   return (
     <>
@@ -45,8 +47,13 @@ export default function Navbar() {
             <span className="live-dot" />
             <span style={{ fontSize:11, fontWeight:700, color:'var(--accent-green)' }}>LIVE</span>
           </span>
-          <button className="btn-ghost" style={{ padding:'5px 12px', fontSize:12 }}>
-            <Moon size={13} /> Night
+          <button 
+            className="btn-ghost" 
+            style={{ padding:'5px 12px', fontSize:12 }}
+            onClick={toggleTheme}
+          >
+            {theme === 'dark' ? <Moon size={13} /> : <Sun size={13} />}
+            {theme === 'dark' ? 'Night' : 'Light'}
           </button>
         </div>
       </nav>

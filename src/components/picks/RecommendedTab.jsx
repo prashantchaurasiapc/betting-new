@@ -73,7 +73,7 @@ export default function RecommendedTab({ slip, onToggleSlip }) {
             .rec-card:hover {
               border-color: var(--blue);
               transform: translateY(-4px);
-              box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+              box-shadow: var(--shadow-float);
             }
             .rec-badge {
               position: absolute;
@@ -98,20 +98,20 @@ export default function RecommendedTab({ slip, onToggleSlip }) {
                 <div style={{ display: 'flex', gap: 16, alignItems: 'center', marginBottom: 20 }}>
                   <div style={{ 
                     width: 50, height: 50, borderRadius: 15, 
-                    background: 'linear-gradient(135deg, #1e293b, #0f172a)',
+                    background: 'var(--icon-bg)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     fontSize: 20, border: '1px solid var(--border-bright)'
                   }}>
                     👤
                   </div>
                   <div>
-                    <h3 style={{ fontSize: 16, fontWeight: 800, color: '#fff' }}>{pick.player}</h3>
+                    <h3 style={{ fontSize: 16, fontWeight: 800, color: 'var(--text-primary)' }}>{pick.player}</h3>
                     <p style={{ fontSize: 12, color: 'var(--text-muted)' }}>{pick.matchup}</p>
                   </div>
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 20 }}>
-                  <div style={{ background: 'rgba(255,255,255,0.03)', padding: 12, borderRadius: 12, border: '1px solid var(--border-soft)' }}>
+                  <div style={{ background: 'var(--bg-alpha-05)', padding: 12, borderRadius: 12, border: '1px solid var(--border-soft)' }}>
                     <p style={{ fontSize: 9, color: 'var(--text-muted)', fontWeight: 700, marginBottom: 4 }}>SELECTION</p>
                     <p style={{ fontSize: 14, fontWeight: 900 }}>
                       <span style={{ color: pick.side === 'OVER' ? 'var(--green)' : 'var(--error)' }}>{pick.side}</span> {pick.line}
@@ -164,7 +164,7 @@ export default function RecommendedTab({ slip, onToggleSlip }) {
                 return (
                   <tr key={pick.id}>
                     <td>
-                      <p style={{ fontWeight: 700, color: '#fff' }}>{pick.player}</p>
+                      <p style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{pick.player}</p>
                       <p style={{ fontSize: 10, color: 'var(--text-muted)' }}>{pick.matchup}</p>
                     </td>
                     <td className="hide-mobile"><span className="chip" style={{ fontSize: 9 }}>{pick.market}</span></td>

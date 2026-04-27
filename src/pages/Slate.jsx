@@ -149,7 +149,7 @@ function GameCard({ game }) {
         onClick={() => setExpanded(!expanded)}
         style={{
           width:'100%', display:'flex', alignItems:'center', justifyContent:'center', gap:6,
-          padding:'10px', borderTop:'1px solid var(--border)', background:'rgba(255,255,255,0.02)',
+          padding:'10px', borderTop:'1px solid var(--border)', background:'var(--bg-alpha-02)',
           border:'none', cursor:'pointer',
           fontSize:12, color: expanded?'var(--blue)':'var(--text-muted)',
           fontFamily:'inherit', transition:'all .2s'
@@ -160,7 +160,7 @@ function GameCard({ game }) {
 
       {/* Expanded Area */}
       {expanded && (
-        <div style={{ padding:'20px', borderTop:'1px solid var(--border)', background:'rgba(0,0,0,0.15)' }} className="anim-fade">
+        <div style={{ padding:'20px', borderTop:'1px solid var(--border)', background:'var(--bg-alpha-05)' }} className="anim-fade">
           {/* Matchup Data Grid */}
           <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(140px,1fr))', gap:12, marginBottom:24 }}>
             {[

@@ -64,7 +64,7 @@ function CircularProgress({ value, size = 48, strokeWidth = 4, color = 'var(--bl
 function HeroCard() {
   return (
     <div className="card anim-slide" style={{ 
-      background: 'linear-gradient(135deg, #1a2436, #0d1117)',
+      background: 'var(--hero-bg)',
       padding: '24px',
       marginTop: '20px',
       position: 'relative',
@@ -88,7 +88,7 @@ function HeroCard() {
             width: 32, 
             height: 32, 
             borderRadius: 6, 
-            background: 'rgba(255,255,255,0.1)', 
+            background: 'var(--badge-glass)', 
             display: 'flex', 
             alignItems: 'center', 
             justifyContent: 'center',
