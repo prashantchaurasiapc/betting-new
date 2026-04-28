@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { SLATE_STATS, GAMES, PLAYER_PROPS } from '../lib/data.js'
-import { AlertTriangle, TrendingUp, Clock, Zap, ChevronDown, ChevronUp, BarChart2, Target, History, Activity } from 'lucide-react'
+import { AlertTriangle, TrendingUp, Clock, Zap, ChevronDown, ChevronUp, BarChart2, Target, History, Activity, TrendingDown, Shield } from 'lucide-react'
 
 function StatCard({ label, value, sub, color }) {
   return (
@@ -46,6 +46,86 @@ function BlowoutMeter({ risk }) {
         <div className="pbar-fill" style={{ width:`${risk}%`, background: gradient }} />
       </div>
       <span style={{ fontSize:10, color:'var(--text-muted)' }}>{risk > 40 ? '🔴 HIGH' : risk > 25 ? '🟡 MODERATE' : '🟢 LOW'} risk</span>
+    </div>
+  )
+}
+
+function PickCard({ p, game }) {
+  const [expanded, setExpanded] = useState(false)
+  const hits = p.trend.filter(v => p.side === 'UNDER' ? v < p.line : v > p.line).length
+
+  return (
+    <div 
+      className="glass-card" 
+      style={{ 
+        borderLeft: `4px solid ${p.side === 'UNDER' ? 'var(--error)' : 'var(--green)'}`,
+        cursor: 'pointer',
+        transition: 'all 0.2s ease'
+      }}
+      onClick={() => setExpanded(!expanded)}
+    >
+      {/* Collapsed Header */}
+      <div style={{ padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div>
+          <p style={{ fontSize: 14, fontWeight: 800, color: 'var(--text-primary)' }}>{p.player}</p>
+          <p style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', marginTop: 2 }}>{p.market} {p.side} {p.line}</p>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <span className={`badge ${p.confidence === 'Strong Lean' ? 'badge-strong' : 'badge-lean'}`}>
+            {p.confidence}
+          </span>
+          {expanded ? <ChevronUp size={16} color="var(--text-muted)" /> : <ChevronDown size={16} color="var(--text-muted)" />}
+        </div>
+      </div>
+
+      {/* Expanded Details */}
+      {expanded && (
+        <div style={{ padding: '0 16px 16px', marginTop: -4 }} className="anim-fade">
+          <div style={{ height: '1px', background: 'var(--border)', margin: '8px 0 12px' }} />
+          
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px 24px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <Target size={12} style={{ color: 'var(--blue)', flexShrink: 0 }} />
+                <span style={{ fontSize: 11, color: 'var(--text-secondary)' }}>Model: <strong style={{ color: 'var(--text-primary)' }}>{p.projection.toFixed(1)}</strong> vs Line: {p.line}</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <History size={12} style={{ color: 'var(--gold)', flexShrink: 0 }} />
+                <span style={{ fontSize: 11, color: 'var(--text-secondary)' }}>Last 5 Avg: <strong style={{ color: 'var(--text-primary)' }}>{p.trendL5.toFixed(1)}</strong></span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <BarChart2 size={12} style={{ color: 'var(--green)', flexShrink: 0 }} />
+                <span style={{ fontSize: 11, color: 'var(--text-secondary)' }}>Trend: <strong style={{ color: 'var(--text-primary)' }}>{p.side.toLowerCase()} in {hits}/5</strong></span>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <Activity size={12} style={{ color: p.sharp === 'Sharp' ? 'var(--error)' : 'var(--blue)', flexShrink: 0 }} />
+                <span style={{ fontSize: 11, color: 'var(--text-secondary)' }}>Line Move: <strong style={{ color: 'var(--text-primary)' }}>{p.move.split(' / ')[0]}</strong> ({p.sharp === 'Sharp' ? 'Sharp Steam' : 'Market Drift'})</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <Shield size={12} style={{ color: 'var(--accent-gold)', flexShrink: 0 }} />
+                <span style={{ fontSize: 11, color: 'var(--text-secondary)' }}>Line Quality: <strong style={{ color: 'var(--text-primary)' }}>{p.edge > 10 ? 'Elite' : p.edge > 5 ? 'Good' : 'Efficient'}</strong></span>
+              </div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 2 }}>
+                <span className={`chip ${p.difficulty === 'HOSTILE' ? 'chip-hostile' : p.difficulty === 'TOUGH' ? 'chip-tough' : 'chip-favorable'}`} style={{ fontSize: 9, padding: '2px 6px' }}>{p.difficulty} SPOT</span>
+                {p.sharp === 'Sharp' && <span className="chip chip-sharp" style={{ fontSize: 9, padding: '2px 6px' }}>ELITE STEAM</span>}
+              </div>
+            </div>
+          </div>
+
+          {/* Injury / Context Warning */}
+          {(p.contextWarning || game.blowoutRisk > 25 || game.injuryImpact > 3) && (
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 6, marginTop: 12, padding: '8px', background: 'rgba(255,170,0,0.05)', borderRadius: '6px', border: '1px solid rgba(255,170,0,0.1)' }}>
+              <AlertTriangle size={12} style={{ color: 'var(--warning)', marginTop: 2, flexShrink: 0 }} />
+              <span style={{ fontSize: 11, color: 'var(--warning)', lineHeight: 1.4 }}>
+                {p.contextWarning || (game.blowoutRisk > 25 ? `High blowout risk (${game.blowoutRisk}%) could impact 4th quarter minutes.` : `High injury impact (${game.injuryImpact}) on roster creates variance.`)}
+              </span>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   )
 }
@@ -161,13 +241,17 @@ function GameCard({ game }) {
       {/* Expanded Area */}
       {expanded && (
         <div style={{ padding:'20px', borderTop:'1px solid var(--border)', background:'var(--bg-alpha-05)' }} className="anim-fade">
-          {/* Matchup Data Grid */}
+          {/* Matchup Data Grid - Restored to 8 Items */}
           <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(140px,1fr))', gap:12, marginBottom:24 }}>
             {[
               { label:'Last 10 Matchups', val:game.last10, color:'var(--text-primary)' },
               { label:'Rest Advantage', val:game.restAdvantage, color:'var(--gold)' },
               { label:`ATS ${game.homeCode}`, val:game.atsRecord.home, color:'var(--text-primary)' },
               { label:'Pace Rating', val:`${game.paceRating} (${game.paceValue})`, color:'var(--blue)' },
+              { label:`Off Rtg (${game.homeCode})`, val:game.offRtg.home, color:'var(--green)' },
+              { label:`Def Rtg (${game.homeCode})`, val:game.defRtg.home, color:'var(--error)' },
+              { label:`Off Rtg (${game.awayCode})`, val:game.offRtg.away, color:'var(--green)' },
+              { label:`Def Rtg (${game.awayCode})`, val:game.defRtg.away, color:'var(--error)' },
             ].map(s => (
               <div key={s.label} style={{ background:'var(--bg-secondary)', border:'1px solid var(--border)', borderRadius:10, padding:'12px' }}>
                 <p style={{ fontSize:9, color:'var(--text-muted)', textTransform:'uppercase', letterSpacing:'.06em', marginBottom:4 }}>{s.label}</p>
@@ -176,61 +260,16 @@ function GameCard({ game }) {
             ))}
           </div>
 
-          {/* PLAYER PICKS SECTION - THE DEPTH USER ASKED FOR */}
+          {/* PLAYER PICKS SECTION */}
           <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
             <h4 style={{ fontSize:11, fontWeight:800, color:'var(--blue)', textTransform:'uppercase', letterSpacing:'.1em', display:'flex', alignItems:'center', gap:8 }}>
               <Zap size={12}/> Top Model Picks for this Matchup
             </h4>
             
-            <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(300px,1fr))', gap:16 }}>
-              {picks.length > 0 ? picks.map(p => {
-                const hits = p.trend.filter(v => p.side==='UNDER' ? v < p.line : v > p.line).length
-                return (
-                  <div key={p.id} className="glass-card" style={{ padding:16, borderLeft:`4px solid ${p.side==='UNDER'?'var(--error)':'var(--green)'}` }}>
-                    <div style={{ display:'flex', justifyContent:'space-between', marginBottom:12 }}>
-                      <div>
-                        <p style={{ fontSize:14, fontWeight:800, color:'var(--text-primary)' }}>{p.player}</p>
-                        <p style={{ fontSize:11, fontWeight:600, color:'var(--text-muted)' }}>{p.market} {p.side} {p.line}</p>
-                      </div>
-                      <span className={`badge ${p.confidence==='Strong Lean'?'badge-strong':'badge-lean'}`} style={{ height:'fit-content' }}>
-                        {p.confidence}
-                      </span>
-                    </div>
-
-                    <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:16 }}>
-                      {/* Analysis Left */}
-                      <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
-                        <div style={{ display:'flex', alignItems:'center', gap:6 }}>
-                          <Target size={12} style={{ color:'var(--blue)' }}/>
-                          <span style={{ fontSize:10, color:'var(--text-secondary)' }}>Model Projection: <strong style={{ color:'var(--text-primary)' }}>{p.projection.toFixed(1)}</strong></span>
-                        </div>
-                        <div style={{ display:'flex', alignItems:'center', gap:6 }}>
-                          <History size={12} style={{ color:'var(--gold)' }}/>
-                          <span style={{ fontSize:10, color:'var(--text-secondary)' }}>L5 Avg: <strong style={{ color:'var(--text-primary)' }}>{p.trendL5.toFixed(1)}</strong></span>
-                        </div>
-                      </div>
-
-                      {/* Analysis Right */}
-                      <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
-                        <div style={{ display:'flex', alignItems:'center', gap:6 }}>
-                          <BarChart2 size={12} style={{ color:'var(--green)' }}/>
-                          <span style={{ fontSize:10, color:'var(--text-secondary)' }}>Recent Trend: <strong style={{ color:'var(--green)' }}>{hits}/5 Hits</strong></span>
-                        </div>
-                        <div style={{ display:'flex', alignItems:'center', gap:6 }}>
-                          <Activity size={12} style={{ color:'var(--blue)' }}/>
-                          <span style={{ fontSize:10, color:'var(--text-secondary)' }}>Line Move: <strong style={{ color:'var(--text-primary)' }}>{p.move}</strong></span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Tags */}
-                    <div style={{ display:'flex', gap:6, marginTop:12 }}>
-                       <span className={`chip ${p.difficulty==='HOSTILE'?'chip-hostile':p.difficulty==='TOUGH'?'chip-tough':'chip-favorable'}`} style={{ fontSize:9 }}>{p.difficulty} SPOT</span>
-                       {p.sharp==='Sharp' && <span className="chip chip-sharp" style={{ fontSize:9 }}>ELITE STEAM</span>}
-                    </div>
-                  </div>
-                )
-              }) : (
+            <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(300px,1fr))', gap:16, alignItems: 'flex-start' }}>
+              {picks.length > 0 ? picks.map(p => (
+                <PickCard key={p.id} p={p} game={game} />
+              )) : (
                 <p style={{ fontSize:12, color:'var(--text-muted)', fontStyle:'italic' }}>No high-confidence props currently identified for this matchup.</p>
               )}
             </div>
