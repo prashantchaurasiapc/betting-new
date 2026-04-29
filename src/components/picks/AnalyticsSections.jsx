@@ -180,7 +180,7 @@ export const ContextSummaryGrid = ({ pick, theme = 'dark', compact = false }) =>
   ];
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
+    <div className="responsive-grid-3">
       {metrics.map(m => (
         <div key={m.label} style={{ 
           background: isDark ? 'rgba(255,255,255,0.06)' : '#F8FAFC', 

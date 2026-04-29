@@ -61,9 +61,9 @@ export default function PropsTable({ data, onSelectPick, selectedPickId }) {
   return (
     <div>
       <div className="filter-bar">
-        <div className="search-wrap">
+        <div className="search-wrap" style={{ flex: '1 1 200px' }}>
           <Search size={13} className="search-icon"/>
-          <input className="input-field" style={{paddingLeft:30,width:190}} placeholder="Search player..." value={search} onChange={e=>setSearch(e.target.value)}/>
+          <input className="input-field" style={{paddingLeft:30, width: '100%'}} placeholder="Search player..." value={search} onChange={e=>setSearch(e.target.value)}/>
         </div>
         <div style={{display:'flex',gap:4,flexWrap:'wrap'}}>
           {MARKETS.map(m=>(
@@ -117,13 +117,13 @@ export default function PropsTable({ data, onSelectPick, selectedPickId }) {
                       <div style={{width:32,height:32,borderRadius:10,background:'linear-gradient(135deg,#1e3a5f,#3b82f6)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:10,fontWeight:900,color:'#fff',flexShrink:0,border:'1px solid rgba(255,255,255,0.1)'}}>
                         {p.player.split(' ').map(w=>w[0]).join('').slice(0,2)}
                       </div>
-                      <div>
+                      <div style={{minWidth: 0}}>
                         <div style={{display:'flex',alignItems:'center',gap:6}}>
-                          <p style={{fontSize:12,fontWeight:700,color:'var(--text-primary)',whiteSpace:'nowrap'}}>{p.player}</p>
-                          {p.edge > 10 && <span title="High Edge" style={{color:'var(--accent-gold)',fontSize:10}}>🔥</span>}
-                          {p.sharp === 'Sharp' && <span title="Sharp Signal" style={{color:'var(--blue)',fontSize:10}}>⚡</span>}
+                          <p style={{fontSize:12,fontWeight:700,color:'var(--text-primary)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{p.player}</p>
+                          {p.edge > 10 && <span className="hide-mobile" title="High Edge" style={{color:'var(--accent-gold)',fontSize:10}}>🔥</span>}
+                          {p.sharp === 'Sharp' && <span className="hide-mobile" title="Sharp Signal" style={{color:'var(--blue)',fontSize:10}}>⚡</span>}
                         </div>
-                        <p style={{fontSize:10,color:'var(--text-muted)',lineHeight:1.2,marginTop:2}}>
+                        <p className="hide-mobile" style={{fontSize:10,color:'var(--text-muted)',lineHeight:1.2,marginTop:2}}>
                           <span style={{color:'var(--blue)',fontWeight:700}}>WHY:</span> {p.market} mismatch vs {p.team} defense
                         </p>
                       </div>

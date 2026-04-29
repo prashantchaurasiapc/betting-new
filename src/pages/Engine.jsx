@@ -76,7 +76,7 @@ function HeroCard() {
         <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-muted)' }}>DEN @ MIN</span>
       </div>
       
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className="mobile-stack" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 20 }}>
         <div>
           <h2 style={{ fontSize: 24, fontWeight: 900, marginBottom: 4 }}>Jamal Murray</h2>
           <p style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-secondary)' }}>PTS UNDER 34.5</p>
@@ -135,7 +135,8 @@ function GameSection({ game }) {
           borderTop: 'none',
           padding: '12px 20px',
           display: 'flex',
-          gap: 24,
+          flexWrap: 'wrap',
+          gap: '12px 24px',
           fontSize: 11,
           color: 'var(--text-muted)'
         }}>
@@ -184,7 +185,7 @@ export default function Engine() {
       <p style={{ fontSize: 14, color: 'var(--text-muted)', marginTop: 4 }}>Sat, Apr 25, 2026</p>
 
       {/* Summary Stats */}
-      <div style={{ display: 'flex', gap: 16, marginTop: 24, flexWrap: 'wrap' }}>
+      <div className="stats-strip" style={{ marginTop: 24 }}>
         <SummaryCard label="GAMES" value="5" />
         <SummaryCard label="PLAYERS" value="200" />
         <SummaryCard label="AVG CONFIDENCE" value="66%" active={true} />

@@ -90,7 +90,7 @@ function PickCard({ p, game }) {
         <div style={{ padding: '0 16px 16px', marginTop: -4 }} className="anim-fade" onClick={e => e.stopPropagation()}>
           <div style={{ height: '1px', background: 'var(--border)', margin: '8px 0 12px' }} />
           
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px 24px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px 24px' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                 <Target size={12} style={{ color: 'var(--blue)', flexShrink: 0 }} />
@@ -233,7 +233,7 @@ function GameCard({ game }) {
         </div>
 
         {/* Best bet */}
-        <div style={{ display:'flex', flexDirection:'column', alignItems:'flex-end', gap:6 }}>
+        <div className="hide-mobile" style={{ display:'flex', flexDirection:'column', alignItems:'flex-end', gap:6 }}>
           <span style={{ fontSize:10, color:'var(--text-muted)', textTransform:'uppercase', letterSpacing:'.06em' }}>Best Bet</span>
           <button className="btn-primary" style={{ fontSize:12, padding:'6px 14px' }}>{game.bestBet}</button>
         </div>
@@ -286,7 +286,7 @@ function GameCard({ game }) {
       {expanded && (
         <div style={{ padding:'20px', borderTop:'1px solid var(--border)', background:'var(--bg-alpha-05)' }} className="anim-fade">
           {/* Matchup Data Grid - Restored to 8 Items */}
-          <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(140px,1fr))', gap:12, marginBottom:24 }}>
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(120px,1fr))', gap:12, marginBottom:24 }}>
             {[
               { label:'Last 10 Matchups', val:game.last10, color:'var(--text-primary)' },
               { label:'Rest Advantage', val:game.restAdvantage, color:'var(--gold)' },

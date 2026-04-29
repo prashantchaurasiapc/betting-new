@@ -170,7 +170,6 @@ export default function Pipeline() {
       </div>
 
       <div className="grid-2" style={{ gap: 24, alignItems: 'start' }}>
-        {/* Left Column: Tasks */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
           <h2 style={{ fontSize: 14, fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Automated Tasks</h2>
           {SECTIONS.map((s, i) => (
@@ -182,8 +181,8 @@ export default function Pipeline() {
               </div>
               <p style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 20, lineHeight: 1.6 }}>{s.desc}</p>
               
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <input type="date" className="input-field" style={{ fontSize: 11, background: 'var(--bg-primary)' }} defaultValue="2026-04-25" />
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+                <input type="date" className="input-field" style={{ fontSize: 11, background: 'var(--bg-primary)', flex: '1 1 120px' }} defaultValue="2026-04-25" />
                 <button 
                   onClick={() => triggerAction(i)}
                   className="btn-ghost" 
@@ -191,7 +190,7 @@ export default function Pipeline() {
                     fontSize: 11, 
                     fontWeight: 700, 
                     color: running === i ? 'var(--blue)' : 'var(--text-primary)',
-                    flex: 1,
+                    flex: '2 1 150px',
                     justifyContent: 'center',
                     background: running === i ? 'var(--blue-dim)' : 'transparent'
                   }}
@@ -204,14 +203,12 @@ export default function Pipeline() {
           ))}
         </div>
 
-        {/* Right Column: Flags & Config */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-          {/* Feature Flags */}
           <div>
             <h2 style={{ fontSize: 14, fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 14 }}>Feature Matrix</h2>
             <div className="card" style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 12 }}>
               {flags.map((f, i) => (
-                <div key={f.key} style={{ display: 'flex', alignItems: 'flex-start', gap: 16, padding: '12px 0', borderBottom: i < flags.length - 1 ? '1px solid var(--border-soft)' : 'none' }}>
+                <div key={f.key} className="mobile-stack" style={{ display: 'flex', alignItems: 'flex-start', gap: 16, padding: '12px 0', borderBottom: i < flags.length - 1 ? '1px solid var(--border-soft)' : 'none' }}>
                   <Toggle on={f.enabled} onToggle={() => toggleFlag(i)} />
                   <div style={{ flex: 1 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
@@ -225,7 +222,6 @@ export default function Pipeline() {
             </div>
           </div>
 
-          {/* System Status */}
           <div>
             <h2 style={{ fontSize: 14, fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 14 }}>System Health</h2>
             <div className="card" style={{ padding: 20, position: 'relative', overflow: 'hidden' }}>
@@ -239,7 +235,7 @@ export default function Pipeline() {
                   { label: 'Model Prediction API', status: 'Online', color: 'var(--green)' },
                   { label: 'Odds API Quota', status: '48% Used', color: 'var(--gold)' },
                 ].map((item, idx) => (
-                  <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div key={idx} className="mobile-stack" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 20 }}>
                     <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{item.label}</span>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                       <span style={{ fontSize: 11, fontWeight: 800, color: item.color }}>{item.status}</span>

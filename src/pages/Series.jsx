@@ -129,9 +129,9 @@ export default function Series() {
           {result && (
             <div className="anim-fade" style={{ display: 'flex', flexDirection: 'column', gap: 32, marginTop: 24 }}>
               {result.map((r, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+                <div key={i} className="mobile-stack" style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
                   <CircularProgress value={parseFloat(r.prob)} size={100} strokeWidth={8} color={r.color} />
-                  <div style={{ flex: 1 }}>
+                  <div style={{ flex: 1, width: '100%' }}>
                     <h3 style={{ fontSize: 24, fontWeight: 900, color: 'var(--text-primary)' }}>{r.team}</h3>
                     <p style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 4 }}>
                       Win Probability: <span style={{ color: r.color, fontWeight: 800 }}>{r.prob}%</span>

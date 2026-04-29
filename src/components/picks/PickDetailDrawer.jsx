@@ -53,6 +53,13 @@ export default function PickDetailDrawer({ pick, onClose, onToggleSlip, isInSlip
           .custom-scrollbar::-webkit-scrollbar { width: 5px; }
           .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
           .custom-scrollbar::-webkit-scrollbar-thumb { background: ${isDark ? '#334155' : '#E2E8F0'}; borderRadius: 10px; }
+          @media (max-width: 640px) {
+            .drawer-header-main { padding: 20px 20px 16px !important; }
+            .drawer-stats-grid { grid-template-columns: 1fr 1fr !important; }
+            .drawer-content-area { padding: 20px 20px 24px !important; }
+            .drawer-profile-title { font-size: 18px !important; }
+            .drawer-footer { padding: 16px 20px 24px !important; }
+          }
         `}</style>
 
         {/* Top Header Section */}
@@ -71,7 +78,7 @@ export default function PickDetailDrawer({ pick, onClose, onToggleSlip, isInSlip
         </div>
 
         {/* Player Profile Header */}
-        <div style={{ padding: '24px 32px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
+        <div className="drawer-header-main" style={{ padding: '24px 32px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 20, flex: 1 }}>
              <div style={{ 
                width: 52, height: 52, borderRadius: '50%', background: isDark ? 'rgba(34,197,94,0.1)' : '#F0FDF4', 
@@ -82,7 +89,7 @@ export default function PickDetailDrawer({ pick, onClose, onToggleSlip, isInSlip
                {pick.player.split(' ').map(n => n[0]).join('')}
              </div>
              <div style={{ minWidth: 0 }}>
-               <h2 style={{ fontSize: 20, fontWeight: 800, color: isDark ? '#FFFFFF' : '#0F172A', marginBottom: 2, letterSpacing: '-0.3px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{pick.player}</h2>
+               <h2 className="drawer-profile-title" style={{ fontSize: 20, fontWeight: 800, color: isDark ? '#FFFFFF' : '#0F172A', marginBottom: 2, letterSpacing: '-0.3px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{pick.player}</h2>
                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                  <span style={{ fontSize: 13, color: isDark ? '#CBD5E1' : '#64748B', fontWeight: 500 }}>{pick.team} vs {opponent}</span>
                  <span style={{ fontSize: 10, background: isDark ? 'rgba(225,29,72,0.1)' : '#FFF1F2', color: '#E11D48', padding: '1px 6px', border: `1px solid ${isDark ? 'rgba(225,29,72,0.2)' : '#FECDD3'}`, borderRadius: 4, fontWeight: 800 }}>HOSTILE</span>
@@ -109,18 +116,18 @@ export default function PickDetailDrawer({ pick, onClose, onToggleSlip, isInSlip
         </div>
 
         {/* Quick Stats Bar */}
-        <div style={{ padding: '12px 32px', background: isDark ? 'rgba(255,255,255,0.02)' : '#F8FAFC', borderBottom: `1px solid ${isDark ? 'rgba(255,255,255,0.05)' : '#F1F5F9'}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div className="mobile-stack" style={{ padding: '12px 32px', background: isDark ? 'rgba(255,255,255,0.02)' : '#F8FAFC', borderBottom: `1px solid ${isDark ? 'rgba(255,255,255,0.05)' : '#F1F5F9'}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
            <div style={{ fontSize: 12, fontWeight: 600, color: isDark ? '#CBD5E1' : '#64748B' }}>L10 PERFORMANCE: <span style={{ color: isDark ? '#FFFFFF' : '#0F172A', fontWeight: 800 }}>5/10 HITS</span> • AVG 24.1</div>
            <div style={{ fontSize: 12, fontWeight: 600, color: isDark ? '#CBD5E1' : '#64748B' }}>{opponent} <span style={{ color: isDark ? '#00D4A1' : '#22C55E', fontWeight: 800 }}>#10 DEFENSE</span></div>
         </div>
 
         {/* Scrollable Analytics Area */}
         <div 
-          className="custom-scrollbar"
+          className="custom-scrollbar drawer-content-area"
           style={{ padding: '28px 32px 32px', flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 32 }}
         >
            {/* Section: Overview Grid */}
-           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+           <div className="drawer-stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
               <div style={{ background: isDark ? 'rgba(255,255,255,0.05)' : '#F8FAFC', padding: 16, borderRadius: 20, textAlign: 'center', border: `1px solid ${isDark ? 'rgba(255,255,255,0.15)' : '#F1F5F9'}` }}>
                 <p style={{ fontSize: 10, color: isDark ? '#CBD5E1' : '#94A3B8', fontWeight: 800, marginBottom: 6, textTransform: 'uppercase' }}>5G AVG</p>
                 <p style={{ fontSize: 18, fontWeight: 900, color: isDark ? '#FFFFFF' : '#0F172A' }}>15.6</p>
@@ -180,7 +187,7 @@ export default function PickDetailDrawer({ pick, onClose, onToggleSlip, isInSlip
         </div>
 
         {/* Footer Action */}
-        <div style={{ padding: '24px 32px 32px', background: isDark ? '#0F172A' : '#FFFFFF', borderTop: `1px solid ${isDark ? 'rgba(255,255,255,0.05)' : '#F1F5F9'}` }}>
+        <div className="drawer-footer" style={{ padding: '24px 32px 32px', background: isDark ? '#0F172A' : '#FFFFFF', borderTop: `1px solid ${isDark ? 'rgba(255,255,255,0.05)' : '#F1F5F9'}` }}>
           <button 
             onClick={() => {
               onToggleSlip(pick)
