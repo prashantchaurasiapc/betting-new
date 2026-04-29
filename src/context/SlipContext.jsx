@@ -1,9 +1,10 @@
 import React, { createContext, useContext, useState } from 'react';
+import { PLAYER_PROPS } from '../lib/data.js';
 
 const SlipContext = createContext();
 
 export function SlipProvider({ children }) {
-  const [slip, setSlip] = useState([]);
+  const [slip, setSlip] = useState(PLAYER_PROPS.slice(0, 3));
 
   const togglePick = (pick) => {
     setSlip(prev => {

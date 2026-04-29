@@ -2,6 +2,97 @@ import React, { useState } from 'react'
 import { PLAYER_PROPS } from '../../lib/data.js'
 import { Zap, TrendingUp, ShieldCheck, Plus, Trash2, LayoutGrid, List } from 'lucide-react'
 
+import { RecentFormSection, OpponentHistorySection, ContextSummaryGrid } from './AnalyticsSections'
+
+function RecommendedCard({ pick, slip, onToggleSlip }) {
+  const [expanded, setExpanded] = useState(false);
+  const isInSlip = slip.some(s => s.id === pick.id);
+  const opponent = pick.matchup.split(' vs ').find(t => t !== pick.team);
+
+  return (
+    <div 
+      className="rec-card anim-fade" 
+      onClick={() => setExpanded(!expanded)}
+      style={{ 
+        cursor: 'pointer',
+        background: expanded ? 'var(--bg-elevated)' : 'var(--bg-card)',
+        borderColor: expanded ? 'var(--blue)' : 'var(--border)'
+      }}
+    >
+      <div className="rec-badge">{pick.confidence}</div>
+      
+      <div style={{ display: 'flex', gap: 16, alignItems: 'center', marginBottom: 20 }}>
+        <div style={{ 
+          width: 50, height: 50, borderRadius: 15, 
+          background: 'var(--icon-bg)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: 20, border: '1px solid var(--border-bright)'
+        }}>
+          👤
+        </div>
+        <div>
+          <h3 style={{ fontSize: 16, fontWeight: 800, color: 'var(--text-primary)' }}>{pick.player}</h3>
+          <p style={{ fontSize: 12, color: 'var(--text-muted)' }}>{pick.matchup}</p>
+        </div>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 20 }}>
+        <div style={{ background: 'var(--bg-alpha-05)', padding: 12, borderRadius: 12, border: '1px solid var(--border-soft)' }}>
+          <p style={{ fontSize: 9, color: 'var(--text-muted)', fontWeight: 700, marginBottom: 4 }}>SELECTION</p>
+          <p style={{ fontSize: 14, fontWeight: 900 }}>
+            <span style={{ color: pick.side === 'OVER' ? 'var(--green)' : 'var(--error)' }}>{pick.side}</span> {pick.line}
+          </p>
+          <p style={{ fontSize: 10, color: 'var(--text-secondary)', marginTop: 2 }}>{pick.market}</p>
+        </div>
+        <div style={{ background: 'rgba(0, 207, 255, 0.05)', padding: 12, borderRadius: 12, border: '1px solid rgba(0, 207, 255, 0.1)' }}>
+          <p style={{ fontSize: 9, color: 'var(--blue)', fontWeight: 700, marginBottom: 4 }}>MODEL EDGE</p>
+          <p className="mono-text" style={{ fontSize: 18, fontWeight: 900, color: 'var(--blue)' }}>+{pick.edge.toFixed(1)}%</p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 2 }}>
+            <TrendingUp size={10} style={{ color: 'var(--blue)' }} />
+            <span style={{ fontSize: 9, color: 'var(--blue)', fontWeight: 700 }}>HIGH EV</span>
+          </div>
+        </div>
+      </div>
+
+      {expanded && (
+        <div className="anim-fade" style={{ marginBottom: 20 }} onClick={e => e.stopPropagation()}>
+          <ContextSummaryGrid pick={pick} />
+          <RecentFormSection 
+            trend={pick.trend} 
+            line={pick.line} 
+            side={pick.side} 
+            market={pick.market} 
+          />
+          <OpponentHistorySection 
+            history={pick.opponentHistory} 
+            line={pick.line} 
+            side={pick.side} 
+            market={pick.market} 
+            opponent={opponent}
+          />
+        </div>
+      )}
+
+      <button 
+        onClick={(e) => {
+          e.stopPropagation();
+          onToggleSlip(pick);
+        }}
+        style={{
+          width: '100%', padding: '12px', borderRadius: 12,
+          border: isInSlip ? '1px solid var(--error)' : 'none',
+          background: isInSlip ? 'transparent' : 'var(--blue)',
+          color: isInSlip ? 'var(--error)' : '#000',
+          fontWeight: 800, fontSize: 13, cursor: 'pointer',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, transition: '0.2s'
+        }}
+      >
+        {isInSlip ? <><Trash2 size={14} /> REMOVE</> : <><Plus size={14} /> ADD TO SLIP</>}
+      </button>
+    </div>
+  );
+}
+
 export default function RecommendedTab({ slip, onToggleSlip }) {
   const [view, setView] = useState('table') // 'table' as default
 
@@ -89,62 +180,16 @@ export default function RecommendedTab({ slip, onToggleSlip }) {
             }
           `}</style>
 
-          {recommendations.map(pick => {
-            const isInSlip = slip.some(s => s.id === pick.id);
-            return (
-              <div key={pick.id} className="rec-card anim-fade">
-                <div className="rec-badge">{pick.confidence}</div>
-                
-                <div style={{ display: 'flex', gap: 16, alignItems: 'center', marginBottom: 20 }}>
-                  <div style={{ 
-                    width: 50, height: 50, borderRadius: 15, 
-                    background: 'var(--icon-bg)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 20, border: '1px solid var(--border-bright)'
-                  }}>
-                    👤
-                  </div>
-                  <div>
-                    <h3 style={{ fontSize: 16, fontWeight: 800, color: 'var(--text-primary)' }}>{pick.player}</h3>
-                    <p style={{ fontSize: 12, color: 'var(--text-muted)' }}>{pick.matchup}</p>
-                  </div>
-                </div>
-
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 20 }}>
-                  <div style={{ background: 'var(--bg-alpha-05)', padding: 12, borderRadius: 12, border: '1px solid var(--border-soft)' }}>
-                    <p style={{ fontSize: 9, color: 'var(--text-muted)', fontWeight: 700, marginBottom: 4 }}>SELECTION</p>
-                    <p style={{ fontSize: 14, fontWeight: 900 }}>
-                      <span style={{ color: pick.side === 'OVER' ? 'var(--green)' : 'var(--error)' }}>{pick.side}</span> {pick.line}
-                    </p>
-                    <p style={{ fontSize: 10, color: 'var(--text-secondary)', marginTop: 2 }}>{pick.market}</p>
-                  </div>
-                  <div style={{ background: 'rgba(0, 207, 255, 0.05)', padding: 12, borderRadius: 12, border: '1px solid rgba(0, 207, 255, 0.1)' }}>
-                    <p style={{ fontSize: 9, color: 'var(--blue)', fontWeight: 700, marginBottom: 4 }}>MODEL EDGE</p>
-                    <p className="mono-text" style={{ fontSize: 18, fontWeight: 900, color: 'var(--blue)' }}>+{pick.edge.toFixed(1)}%</p>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 2 }}>
-                      <TrendingUp size={10} style={{ color: 'var(--blue)' }} />
-                      <span style={{ fontSize: 9, color: 'var(--blue)', fontWeight: 700 }}>HIGH EV</span>
-                    </div>
-                  </div>
-                </div>
-
-                <button 
-                  onClick={() => onToggleSlip(pick)}
-                  style={{
-                    width: '100%', padding: '12px', borderRadius: 12,
-                    border: isInSlip ? '1px solid var(--error)' : 'none',
-                    background: isInSlip ? 'transparent' : 'var(--blue)',
-                    color: isInSlip ? 'var(--error)' : '#000',
-                    fontWeight: 800, fontSize: 13, cursor: 'pointer',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, transition: '0.2s'
-                  }}
-                >
-                  {isInSlip ? <><Trash2 size={14} /> REMOVE</> : <><Plus size={14} /> ADD TO SLIP</>}
-                </button>
-              </div>
-            );
-          })}
+          {recommendations.map(pick => (
+            <RecommendedCard 
+              key={pick.id} 
+              pick={pick} 
+              slip={slip} 
+              onToggleSlip={onToggleSlip} 
+            />
+          ))}
         </div>
+
       ) : (
         <div className="card table-wrap anim-fade" style={{ borderRadius: 16, overflow: 'hidden' }}>
           <table className="dt">

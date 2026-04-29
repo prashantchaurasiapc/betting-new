@@ -33,7 +33,7 @@ export default function Navbar() {
               className={({ isActive }) => 'nav-link' + (isActive ? ' active' : '')}
             >
               {item.label}
-              {(item.path === '/picks' || item.path === '/lineup') && slip.length > 0 && (
+              {item.path === '/picks' && slip.length > 0 && (
                 <span className="tab-count" style={{ marginLeft: 6, background: 'var(--green-dim)', color: 'var(--green)', borderColor: 'var(--green)' }}>
                   {slip.length}
                 </span>

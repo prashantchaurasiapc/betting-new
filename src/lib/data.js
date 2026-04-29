@@ -103,19 +103,132 @@ export const GAMES = [
 ]
 
 export const PLAYER_PROPS = [
-  { id:1, player:'Shai Gilgeous-Alexander', team:'OKC', matchup:'OKC vs PHX', market:'PTS', line:27.5, projection:21.8, edge:-14.0, score:17.181, confidence:'Strong Lean', side:'UNDER', trend:[28,31,24,29,26], trendL3:28.0, trendL5:27.6, difficulty:'HOSTILE', move:'-0.98 / 1.00', sharp:'Sharp', align:'WITH' },
-  { id:2, player:'Cade Cunningham',           team:'DET', matchup:'DET vs ORL', market:'PTS', line:25.5, projection:19.2, edge:-13.9, score:14.993, confidence:'Strong Lean', side:'UNDER', trend:[27,24,22,28,25], trendL3:24.3, trendL5:25.2, difficulty:'HOSTILE', move:'-0.98 / 1.00', sharp:'Sharp', align:'AGAINST' },
-  { id:3, player:'Anthony Edwards',           team:'MIN', matchup:'MIN vs DEN', market:'PTS', line:26.5, projection:20.1, edge:-12.7, score:14.847, confidence:'Strong Lean', side:'UNDER', trend:[30,25,22,27,28], trendL3:25.7, trendL5:26.4, difficulty:'HOSTILE', move:'1.97 / 4.00', sharp:'Sharp', align:'AGAINST' },
-  { id:4, player:'Julius Randle',             team:'MIN', matchup:'MIN vs DEN', market:'PTS', line:18.5, projection:14.2, edge:-11.2, score:12.555, confidence:'Strong Lean', side:'UNDER', trend:[20,17,15,19,18], trendL3:17.3, trendL5:17.8, difficulty:'HOSTILE', move:'0.00 / 2.00', sharp:'Sharp', align:'AGAINST' },
-  { id:5, player:'Jalen Brunson',             team:'NYK', matchup:'NYK vs ATL', market:'PTS', line:25.5, projection:19.8, edge:-8.9,  score:10.324, confidence:'Strong Lean', side:'UNDER', trend:[26,24,22,25,24], trendL3:24.0, trendL5:24.2, difficulty:'HOSTILE', move:'0.00 / 2.00', sharp:'Sharp', align:'AGAINST' },
-  { id:6, player:'Jalen Duren',               team:'DET', matchup:'DET vs ORL', market:'PTS', line:12.5, projection:10.2, edge:-9.1,  score:9.890,  confidence:'Strong Lean', side:'UNDER', trend:[13,11,10,12,14], trendL3:11.3, trendL5:12.0, difficulty:'HOSTILE', move:'0.00 / 0.00', sharp:'Drift',  align:'NEUTRAL' },
-  { id:7, player:'Jalen Johnson',             team:'ATL', matchup:'ATL vs NYK', market:'PTS', line:20.5, projection:16.8, edge:-7.1,  score:8.933,  confidence:'Strong Lean', side:'UNDER', trend:[21,19,18,22,20], trendL3:19.3, trendL5:20.0, difficulty:'HOSTILE', move:'0.98 / 3.00', sharp:'Sharp', align:'AGAINST' },
-  { id:8, player:'Karl-Anthony Towns',        team:'NYK', matchup:'NYK vs ATL', market:'PTS', line:19.5, projection:16.4, edge:-6.1,  score:7.643,  confidence:'Lean',        side:'UNDER', trend:[20,18,17,21,19], trendL3:18.3, trendL5:19.0, difficulty:'HOSTILE', move:'0.98 / 3.00', sharp:'Sharp', align:'AGAINST' },
-  { id:9, player:'Devin Booker',              team:'PHX', matchup:'PHX vs OKC', market:'PTS', line:19.5, projection:16.2, edge:-6.1,  score:7.591,  confidence:'Strong Lean', side:'UNDER', trend:[22,18,19,20,18], trendL3:19.7, trendL5:19.4, difficulty:'HOSTILE', move:'-0.98 / 1.00', sharp:'Sharp', align:'WITH' },
-  { id:10, player:'Miles McBride',            team:'NYK', matchup:'NYK vs ATL', market:'PTS', line:6.5,  projection:5.0,  edge:-5.5,  score:6.265,  confidence:'Lean',        side:'UNDER', trend:[8,6,5,7,6],     trendL3:6.3,  trendL5:6.4,  difficulty:'HOSTILE', move:'-0.98 / 1.00', sharp:'Sharp', align:'AGAINST' },
-  { id:11, player:'Anthony Edwards',          team:'MIN', matchup:'MIN vs DEN', market:'REB', line:5.5,  projection:4.2,  edge:-4.8,  score:5.880,  confidence:'Lean',        side:'UNDER', trend:[6,5,4,6,5],     trendL3:5.0,  trendL5:5.2,  difficulty:'TOUGH',   move:'0.50 / 1.00', sharp:'Sharp', align:'AGAINST' },
-  { id:12, player:'Nikola Jokic',             team:'DEN', matchup:'DEN vs MIN', market:'AST', line:9.5,  projection:11.2, edge:4.2,   score:8.140,  confidence:'Lean',        side:'OVER',  trend:[10,12,11,9,10], trendL3:11.0, trendL5:10.4, difficulty:'FAVORABLE', move:'0.00 / 0.00', sharp:'Drift', align:'WITH' },
+  { 
+    id:1, player:'Shai Gilgeous-Alexander', team:'OKC', matchup:'OKC vs PHX', market:'PTS', line:27.5, projection:21.8, edge:-14.0, score:17.181, confidence:'Strong Lean', side:'UNDER', 
+    trend:[28,31,24,29,26,22,33,25,30,28], trendL3:28.0, trendL5:27.6, trendL10:27.6,
+    opponentHistory: [
+      { date: '2026-02-12', opponent: 'PHX', home: true, result: 24 },
+      { date: '2025-12-05', opponent: 'PHX', home: false, result: 31 },
+      { date: '2025-11-14', opponent: 'PHX', home: true, result: 26 }
+    ],
+    difficulty:'HOSTILE', move:'-0.98 / 1.00', sharp:'Sharp', align:'WITH',
+    defensiveRank: 4, volatility: 2.1, adjProjection: 22.4
+  },
+  { 
+    id:2, player:'Cade Cunningham', team:'DET', matchup:'DET vs ORL', market:'PTS', line:25.5, projection:19.2, edge:-13.9, score:14.993, confidence:'Strong Lean', side:'UNDER', 
+    trend:[27,24,22,28,25,23,26,21,29,24], trendL3:24.3, trendL5:25.2, trendL10:24.9,
+    opponentHistory: [
+      { date: '2026-03-01', opponent: 'ORL', home: false, result: 22 },
+      { date: '2026-01-15', opponent: 'ORL', home: true, result: 28 },
+      { date: '2025-12-20', opponent: 'ORL', home: false, result: 25 }
+    ],
+    difficulty:'HOSTILE', move:'-0.98 / 1.00', sharp:'Sharp', align:'AGAINST',
+    defensiveRank: 2, volatility: 1.8, adjProjection: 19.8
+  },
+  { 
+    id:3, player:'Anthony Edwards', team:'MIN', matchup:'MIN vs DEN', market:'PTS', line:26.5, projection:20.1, edge:-12.7, score:14.847, confidence:'Strong Lean', side:'UNDER', 
+    trend:[30,25,22,27,28,24,31,26,29,25], trendL3:25.7, trendL5:26.4, trendL10:26.7,
+    opponentHistory: [
+      { date: '2026-04-10', opponent: 'DEN', home: true, result: 22 },
+      { date: '2026-02-28', opponent: 'DEN', home: false, result: 34 },
+      { date: '2025-12-15', opponent: 'DEN', home: true, result: 25 }
+    ],
+    difficulty:'HOSTILE', move:'1.97 / 4.00', sharp:'Sharp', align:'AGAINST',
+    defensiveRank: 6, volatility: 2.5, adjProjection: 21.2
+  },
+  { 
+    id:4, player:'Julius Randle', team:'MIN', matchup:'MIN vs DEN', market:'PTS', line:18.5, projection:14.2, edge:-11.2, score:12.555, confidence:'Strong Lean', side:'UNDER', 
+    trend:[20,17,15,19,18,16,21,18,22,17], trendL3:17.3, trendL5:17.8, trendL10:18.3,
+    opponentHistory: [
+      { date: '2026-04-10', opponent: 'DEN', home: true, result: 15 },
+      { date: '2026-02-28', opponent: 'DEN', home: false, result: 23 }
+    ],
+    difficulty:'HOSTILE', move:'0.00 / 2.00', sharp:'Sharp', align:'AGAINST',
+    defensiveRank: 6, volatility: 3.1, adjProjection: 15.5
+  },
+  { 
+    id:5, player:'Jalen Brunson', team:'NYK', matchup:'NYK vs ATL', market:'PTS', line:25.5, projection:19.8, edge:-8.9, score:10.324, confidence:'Strong Lean', side:'UNDER', 
+    trend:[26,24,22,25,24,28,21,23,26,25], trendL3:24.0, trendL5:24.2, trendL10:24.9,
+    opponentHistory: [
+      { date: '2026-03-15', opponent: 'ATL', home: true, result: 21 },
+      { date: '2026-01-20', opponent: 'ATL', home: false, result: 32 },
+      { date: '2025-11-30', opponent: 'ATL', home: true, result: 24 }
+    ],
+    difficulty:'HOSTILE', move:'0.00 / 2.00', sharp:'Sharp', align:'AGAINST',
+    defensiveRank: 22, volatility: 1.5, adjProjection: 20.5
+  },
+  { 
+    id:6, player:'Jalen Duren', team:'DET', matchup:'DET vs ORL', market:'PTS', line:12.5, projection:10.2, edge:-9.1, score:9.890, confidence:'Strong Lean', side:'UNDER', 
+    trend:[13,11,10,12,14,9,15,11,12,13], trendL3:11.3, trendL5:12.0, trendL10:12.0,
+    opponentHistory: [
+      { date: '2026-03-01', opponent: 'ORL', home: false, result: 10 },
+      { date: '2026-01-15', opponent: 'ORL', home: true, result: 14 }
+    ],
+    difficulty:'HOSTILE', move:'0.00 / 0.00', sharp:'Drift', align:'NEUTRAL',
+    defensiveRank: 2, volatility: 1.2, adjProjection: 10.8
+  },
+  { 
+    id:7, player:'Jalen Johnson', team:'ATL', matchup:'ATL vs NYK', market:'PTS', line:20.5, projection:16.8, edge:-7.1, score:8.933, confidence:'Strong Lean', side:'UNDER', 
+    trend:[21,19,18,22,20,17,23,19,20,21], trendL3:19.3, trendL5:20.0, trendL10:20.0,
+    opponentHistory: [
+      { date: '2026-03-15', opponent: 'NYK', home: false, result: 18 },
+      { date: '2026-01-20', opponent: 'NYK', home: true, result: 24 }
+    ],
+    difficulty:'HOSTILE', move:'0.98 / 3.00', sharp:'Sharp', align:'AGAINST',
+    defensiveRank: 1, volatility: 1.9, adjProjection: 17.5
+  },
+  { 
+    id:8, player:'Karl-Anthony Towns', team:'NYK', matchup:'NYK vs ATL', market:'PTS', line:19.5, projection:16.4, edge:-6.1, score:7.643, confidence:'Lean', side:'UNDER', 
+    trend:[20,18,17,21,19,16,22,18,20,19], trendL3:18.3, trendL5:19.0, trendL10:19.0,
+    opponentHistory: [
+      { date: '2026-03-15', opponent: 'ATL', home: true, result: 17 },
+      { date: '2026-01-20', opponent: 'ATL', home: false, result: 25 }
+    ],
+    difficulty:'HOSTILE', move:'0.98 / 3.00', sharp:'Sharp', align:'AGAINST',
+    defensiveRank: 22, volatility: 2.2, adjProjection: 17.2
+  },
+  { 
+    id:9, player:'Devin Booker', team:'PHX', matchup:'PHX vs OKC', market:'PTS', line:19.5, projection:16.2, edge:-6.1, score:7.591, confidence:'Strong Lean', side:'UNDER', 
+    trend:[22,18,19,20,18,21,17,19,20,19], trendL3:19.7, trendL5:19.4, trendL10:19.3,
+    opponentHistory: [
+      { date: '2026-02-12', opponent: 'OKC', home: false, result: 18 },
+      { date: '2025-12-05', opponent: 'OKC', home: true, result: 24 }
+    ],
+    difficulty:'HOSTILE', move:'-0.98 / 1.00', sharp:'Sharp', align:'WITH',
+    defensiveRank: 3, volatility: 2.0, adjProjection: 16.8
+  },
+  { 
+    id:10, player:'Miles McBride', team:'NYK', matchup:'NYK vs ATL', market:'PTS', line:6.5, projection:5.0, edge:-5.5, score:6.265, confidence:'Lean', side:'UNDER', 
+    trend:[8,6,5,7,6,4,7,5,6,6], trendL3:6.3, trendL5:6.4, trendL10:6.1,
+    opponentHistory: [
+      { date: '2026-03-15', opponent: 'ATL', home: true, result: 5 },
+      { date: '2026-01-20', opponent: 'ATL', home: false, result: 9 }
+    ],
+    difficulty:'HOSTILE', move:'-0.98 / 1.00', sharp:'Sharp', align:'AGAINST',
+    defensiveRank: 22, volatility: 1.1, adjProjection: 5.5
+  },
+  { 
+    id:11, player:'Anthony Edwards', team:'MIN', matchup:'MIN vs DEN', market:'REB', line:5.5, projection:4.2, edge:-4.8, score:5.880, confidence:'Lean', side:'UNDER', 
+    trend:[6,5,4,6,5,3,7,4,5,5], trendL3:5.0, trendL5:5.2, trendL10:5.0,
+    opponentHistory: [
+      { date: '2026-04-10', opponent: 'DEN', home: true, result: 4 },
+      { date: '2026-02-28', opponent: 'DEN', home: false, result: 8 }
+    ],
+    difficulty:'TOUGH', move:'0.50 / 1.00', sharp:'Sharp', align:'AGAINST',
+    defensiveRank: 6, volatility: 1.4, adjProjection: 4.5
+  },
+  { 
+    id:12, player:'Nikola Jokic', team:'DEN', matchup:'DEN vs MIN', market:'AST', line:9.5, projection:11.2, edge:4.2, score:8.140, confidence:'Lean', side:'OVER', 
+    trend:[10,12,11,9,10,13,8,11,12,10], trendL3:11.0, trendL5:10.4, trendL10:10.6,
+    opponentHistory: [
+      { date: '2026-04-10', opponent: 'MIN', home: false, result: 12 },
+      { date: '2026-02-28', opponent: 'MIN', home: true, result: 9 }
+    ],
+    difficulty:'FAVORABLE', move:'0.00 / 0.00', sharp:'Drift', align:'WITH',
+    defensiveRank: 10, volatility: 2.8, adjProjection: 10.5
+  },
 ]
+
 
 export const BIG_MOVERS = [
   { player:'CJ McCollum',             matchup:'ATL vs NYK', market:'PTS', line:19.5, newLine:15.5, move:-4.0, sigma:0.70, type:'Sharp', pick:'UNDER', strength:'Marginal',   align:'AGAINST' },

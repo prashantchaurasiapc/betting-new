@@ -9,11 +9,13 @@ import PPSlipTab from '../components/picks/PPSlipTab'
 import RecommendedTab from '../components/picks/RecommendedTab'
 
 import { useSlip } from '../context/SlipContext'
+import { useTheme } from '../context/ThemeContext'
 
 export default function Picks() {
   const [tab, setTab] = useState('top')
   const [selectedPick, setSelectedPick] = useState(null)
   const { slip, togglePick, removePick } = useSlip()
+  const { theme } = useTheme()
 
   const TABS = [
     {key:'top',         label:'Top Picks',       badge:null},
@@ -62,6 +64,7 @@ export default function Picks() {
         onClose={() => setSelectedPick(null)} 
         onToggleSlip={togglePick}
         isInSlip={slip.some(p => p.id === selectedPick?.id)}
+        theme={theme}
       />
     </div>
   )

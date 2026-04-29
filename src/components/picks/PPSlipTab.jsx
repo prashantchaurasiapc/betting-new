@@ -1,5 +1,5 @@
 import React from 'react'
-import { Trash2, ShieldCheck, AlertCircle, TrendingUp } from 'lucide-react'
+import { Trash2, ShieldCheck, AlertCircle, Info, CheckSquare, Square } from 'lucide-react'
 
 export default function PPSlipTab({ slip, onRemove }) {
   if (slip.length === 0) {
@@ -19,101 +19,141 @@ export default function PPSlipTab({ slip, onRemove }) {
     )
   }
 
-  const avgEdge = (slip.reduce((a, b) => a + b.edge, 0) / slip.length).toFixed(1)
+  const getMarketColor = (m) => {
+    switch (m) {
+      case 'REB': return 'var(--green)';
+      case 'AST': return 'var(--blue)';
+      case 'PTS': return 'var(--warning)';
+      case 'PRA': return '#818cf8';
+      default: return 'var(--text-muted)';
+    }
+  }
 
   return (
-    <div className="anim-fade" style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 24, alignItems: 'start' }}>
-      <style>{`
-        .slip-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-          gap: 16px;
-        }
-        @media (max-width: 900px) {
-          .anim-fade { grid-template-columns: 1fr !important; }
-        }
-      `}</style>
+    <div className="anim-fade">
+      {/* PP Slip Header Section */}
+      <div style={{ marginBottom: 24, borderBottom: '1px solid var(--border-soft)', paddingBottom: 20 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
+          <h1 style={{ fontSize: 20, fontWeight: 900, letterSpacing: '-0.5px' }}>PP Slip Builder</h1>
+          <span style={{ fontSize: 11, color: 'var(--text-muted)', background: 'var(--bg-elevated)', padding: '2px 8px', borderRadius: 4 }}>
+            Covering {slip.length} players on today's PrizePicks slate
+          </span>
+        </div>
+        <p style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 16 }}>
+          Sweet-spot edges (±3-4% plus vs PP line) — 64% historical hit rate — REFUND first (72%)
+        </p>
+        
+        {/* Legend */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 10, color: 'var(--text-muted)' }}>
+            <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--green)' }} /> Green border = top composite score
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 10, color: 'var(--text-muted)' }}>
+            <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--warning)' }} /> Orange border = back-to-back game
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 10, color: 'var(--text-muted)' }}>
+            <Info size={10} /> Opponent defense grade for this market
+          </div>
+        </div>
+      </div>
 
-      {/* Main List */}
-      <div className="slip-grid">
+      {/* Slip List */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         {slip.map(p => (
-          <div key={p.id} className="card glass-card-premium" style={{ padding: 20, borderRadius: 16, position: 'relative' }}>
-            <button 
-              onClick={() => onRemove(p.id)}
-              style={{ position: 'absolute', top: 12, right: 12, background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}
-            >
-              <Trash2 size={16} />
-            </button>
+          <div key={p.id} className="card" style={{ 
+            padding: '12px 16px', 
+            display: 'grid', 
+            gridTemplateColumns: '40px 60px 1fr 120px', 
+            alignItems: 'center',
+            background: 'var(--bg-card)',
+            border: '1px solid var(--border-soft)',
+            borderRadius: 12,
+            transition: 'all 0.2s'
+          }}>
+            {/* Checkbox & Score */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+              <CheckSquare size={18} style={{ color: 'var(--blue)' }} />
+              <span style={{ fontSize: 9, fontWeight: 700, color: 'var(--text-muted)' }}>{Math.round(p.score || 0)}</span>
+            </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-              <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'linear-gradient(135deg, var(--blue), var(--green))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, color: '#000' }}>
-                {p.player.split(' ').map(n => n[0]).join('')}
-              </div>
-              <div>
-                <h3 style={{ fontSize: 14, fontWeight: 800 }}>{p.player}</h3>
-                <p style={{ fontSize: 11, color: 'var(--text-muted)' }}>{p.team} • {p.market}</p>
+            {/* Market Badge */}
+            <div style={{ paddingLeft: 4 }}>
+              <div style={{ 
+                width: 44, height: 24, borderRadius: 4, 
+                background: `${getMarketColor(p.market)}15`, 
+                border: `1px solid ${getMarketColor(p.market)}40`,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: 10, fontWeight: 900, color: getMarketColor(p.market)
+              }}>
+                {p.market}
               </div>
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--bg-elevated)', padding: '12px 16px', borderRadius: 12 }}>
-              <div>
-                <p style={{ fontSize: 10, color: 'var(--text-muted)', fontWeight: 700, letterSpacing: 1 }}>SELECTION</p>
-                <p style={{ fontSize: 16, fontWeight: 900, color: p.side === 'OVER' ? 'var(--green)' : 'var(--error)' }}>
-                  {p.side} {p.line}
-                </p>
+            {/* Player Info & Stats Row */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 4, paddingLeft: 8 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{ fontSize: 14, fontWeight: 800 }}>{p.player}</span>
+                <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>{p.matchup || p.team}</span>
               </div>
-              <div style={{ textAlign: 'right' }}>
-                <p style={{ fontSize: 10, color: 'var(--text-muted)', fontWeight: 700, letterSpacing: 1 }}>PROJECTION</p>
-                <p className="mono-text" style={{ fontSize: 16, fontWeight: 900, color: 'var(--blue)' }}>{p.projection}</p>
+              
+              <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                <div style={{ display: 'flex', gap: 8, fontSize: 11 }}>
+                  <span style={{ color: 'var(--text-muted)', fontWeight: 600 }}>PP <span style={{ color: 'var(--text-primary)' }}>{p.line}</span></span>
+                  <span style={{ color: p.side === 'OVER' ? 'var(--green)' : 'var(--error)', fontWeight: 800 }}>L {p.side}</span>
+                  <span style={{ color: 'var(--text-muted)', fontWeight: 600 }}>PROJ <span style={{ color: 'var(--blue)' }}>{p.projection}</span></span>
+                </div>
+                
+                {/* Tags */}
+                <div style={{ display: 'flex', gap: 6 }}>
+                  {p.sharp === 'Sharp' && <span style={{ fontSize: 9, color: 'var(--green)', background: 'var(--green-dim)', padding: '1px 6px', borderRadius: 3, border: '1px solid var(--green-dim)' }}>Elite</span>}
+                  <span style={{ fontSize: 9, color: 'var(--warning)', background: 'var(--gold-dim)', padding: '1px 6px', borderRadius: 3 }}>Hot</span>
+                  <span style={{ fontSize: 9, color: 'var(--text-muted)', background: 'var(--bg-elevated)', padding: '1px 6px', borderRadius: 3 }}>HOME</span>
+                  {p.difficulty === 'TOUGH' && <span style={{ fontSize: 9, color: 'var(--error)', background: 'rgba(255,77,79,0.1)', padding: '1px 6px', borderRadius: 3 }}>Tough</span>}
+                </div>
               </div>
             </div>
 
-            <div style={{ marginTop: 12, display: 'flex', gap: 8 }}>
-              <span className="chip" style={{ background: 'var(--bg-secondary)', fontSize: 9 }}>EDGE: {p.edge.toFixed(1)}%</span>
-              <span className="chip" style={{ background: 'var(--bg-secondary)', fontSize: 9 }}>DIFF: {p.difficulty}</span>
+            {/* Edge & Action */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4 }}>
+              <div style={{ fontSize: 18, fontWeight: 900, color: p.edge > 0 ? 'var(--green)' : 'var(--error)' }}>
+                {p.edge > 0 ? '+' : ''}{p.edge.toFixed(1)}
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span className={`badge ${p.confidence === 'Strong Lean' ? 'badge-strong' : 'badge-lean'}`} style={{ fontSize: 9, padding: '2px 6px' }}>
+                    {p.confidence}
+                  </span>
+                  <button 
+                    onClick={() => onRemove(p.id)}
+                    style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: 4 }}
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                </div>
+                <div style={{ fontSize: 8, fontWeight: 800, color: 'var(--blue)', background: 'var(--blue-dim)', padding: '1px 4px', borderRadius: 2 }}>
+                  PP
+                </div>
+              </div>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Summary Sidebar */}
-      <div className="card" style={{ padding: 24, borderRadius: 20, position: 'sticky', top: 80, background: 'var(--bg-secondary)', border: '1px solid var(--border)' }}>
-        <h2 style={{ fontSize: 18, fontWeight: 900, marginBottom: 20, display: 'flex', alignItems: 'center', gap: 10 }}>
-          <ShieldCheck style={{ color: 'var(--green)' }} /> Entry Summary
-        </h2>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <span style={{ color: 'var(--text-secondary)', fontSize: 13 }}>Total Picks</span>
-            <span style={{ fontWeight: 800 }}>{slip.length}</span>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <span style={{ color: 'var(--text-secondary)', fontSize: 13 }}>Avg. Model Edge</span>
-            <span style={{ fontWeight: 800, color: 'var(--green)' }}>+{avgEdge}%</span>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <span style={{ color: 'var(--text-secondary)', fontSize: 13 }}>Consensus Sharp</span>
-            <span style={{ fontWeight: 800, color: 'var(--gold)' }}>High</span>
-          </div>
-
-          <div style={{ height: 1, background: 'var(--border-soft)', margin: '8px 0' }} />
-
-          <div style={{ background: 'rgba(0, 207, 255, 0.05)', padding: 16, borderRadius: 12, border: '1px solid rgba(0, 207, 255, 0.2)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-              <AlertCircle size={14} style={{ color: 'var(--blue)' }} />
-              <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--blue)' }}>Model Confidence</span>
-            </div>
-            <p style={{ fontSize: 11, color: 'var(--text-secondary)', lineHeight: 1.5 }}>
-              This entry has a <strong>{slip.length > 3 ? '68%' : '74%'}</strong> probability of hitting at least {Math.ceil(slip.length * 0.7)} legs based on backtested data.
-            </p>
-          </div>
-
-          <button style={{ 
-            marginTop: 10, width: '100%', background: 'linear-gradient(135deg, var(--green), var(--blue))', border: 'none', borderRadius: 12, padding: '14px', color: '#000', fontWeight: 800, fontSize: 14, cursor: 'pointer', boxShadow: '0 4px 20px rgba(0,212,161,0.3)'
-          }}>
-            COPY SLIP TO PRIZEPICKS
-          </button>
+      {/* Sticky Bottom Action */}
+      <div style={{ 
+        marginTop: 32, padding: 20, borderRadius: 16, 
+        background: 'linear-gradient(90deg, var(--bg-secondary), var(--bg-elevated))',
+        border: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+      }}>
+        <div>
+          <p style={{ fontSize: 11, color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>Consensus Edge</p>
+          <p style={{ fontSize: 18, fontWeight: 900, color: 'var(--green)' }}>
+            +{(slip.reduce((a, b) => a + b.edge, 0) / slip.length).toFixed(1)}% Avg
+          </p>
         </div>
+        <button className="btn-primary" style={{ padding: '12px 24px' }}>
+          COPY SLIP TO PRIZEPICKS
+        </button>
       </div>
     </div>
   )

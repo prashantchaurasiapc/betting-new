@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { SLATE_STATS, GAMES, PLAYER_PROPS } from '../lib/data.js'
 import { AlertTriangle, TrendingUp, Clock, Zap, ChevronDown, ChevronUp, BarChart2, Target, History, Activity, TrendingDown, Shield } from 'lucide-react'
+import { useTheme } from '../context/ThemeContext'
 
 function StatCard({ label, value, sub, color }) {
   return (
@@ -50,8 +51,12 @@ function BlowoutMeter({ risk }) {
   )
 }
 
+import { RecentFormSection, OpponentHistorySection, ContextSummaryGrid } from '../components/picks/AnalyticsSections'
+
 function PickCard({ p, game }) {
   const [expanded, setExpanded] = useState(false)
+  const { theme } = useTheme()
+  const isDark = theme === 'dark'
   const hits = p.trend.filter(v => p.side === 'UNDER' ? v < p.line : v > p.line).length
 
   return (
@@ -60,7 +65,8 @@ function PickCard({ p, game }) {
       style={{ 
         borderLeft: `4px solid ${p.side === 'UNDER' ? 'var(--error)' : 'var(--green)'}`,
         cursor: 'pointer',
-        transition: 'all 0.2s ease'
+        transition: 'all 0.2s ease',
+        background: expanded ? 'var(--bg-elevated)' : 'var(--bg-card)'
       }}
       onClick={() => setExpanded(!expanded)}
     >
@@ -71,6 +77,7 @@ function PickCard({ p, game }) {
           <p style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', marginTop: 2 }}>{p.market} {p.side} {p.line}</p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          {p.edge > 10 && <span className="badge badge-strong" style={{ fontSize: 9 }}>HOT</span>}
           <span className={`badge ${p.confidence === 'Strong Lean' ? 'badge-strong' : 'badge-lean'}`}>
             {p.confidence}
           </span>
@@ -80,7 +87,7 @@ function PickCard({ p, game }) {
 
       {/* Expanded Details */}
       {expanded && (
-        <div style={{ padding: '0 16px 16px', marginTop: -4 }} className="anim-fade">
+        <div style={{ padding: '0 16px 16px', marginTop: -4 }} className="anim-fade" onClick={e => e.stopPropagation()}>
           <div style={{ height: '1px', background: 'var(--border)', margin: '8px 0 12px' }} />
           
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px 24px' }}>
@@ -115,12 +122,48 @@ function PickCard({ p, game }) {
             </div>
           </div>
 
+          {/* ADVANCED ANALYTICS SECTION */}
+          <div style={{ marginTop: 24, display: 'flex', flexDirection: 'column', gap: 24 }}>
+            <div style={{ height: '1px', background: 'rgba(255,255,255,0.06)' }} />
+            
+            {/* 3. Context Summary */}
+            <div>
+              <p style={{ fontSize: 10, fontWeight: 900, color: isDark ? '#94A3B8' : '#475569', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: 12 }}>Context Summary</p>
+              <ContextSummaryGrid pick={p} theme={theme} compact={true} />
+            </div>
+
+            <div style={{ height: '1px', background: 'rgba(0,0,0,0.06)' }} />
+
+            {/* 1. Recent Form (Last 10 Games) */}
+            <RecentFormSection 
+              trend={p.trend} 
+              line={p.line} 
+              side={p.side} 
+              market={p.market} 
+              theme={theme}
+              compact={true}
+            />
+
+            <div style={{ height: '1px', background: 'rgba(0,0,0,0.05)' }} />
+
+            {/* 2. Opponent History */}
+            <OpponentHistorySection 
+              history={p.opponentHistory} 
+              line={p.line} 
+              side={p.side} 
+              market={p.market} 
+              opponent={game.homeCode === p.team ? game.awayCode : game.homeCode}
+              theme={theme}
+              compact={true}
+            />
+          </div>
+
           {/* Injury / Context Warning */}
           {(p.contextWarning || game.blowoutRisk > 25 || game.injuryImpact > 3) && (
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 6, marginTop: 12, padding: '8px', background: 'rgba(255,170,0,0.05)', borderRadius: '6px', border: '1px solid rgba(255,170,0,0.1)' }}>
-              <AlertTriangle size={12} style={{ color: 'var(--warning)', marginTop: 2, flexShrink: 0 }} />
-              <span style={{ fontSize: 11, color: 'var(--warning)', lineHeight: 1.4 }}>
-                {p.contextWarning || (game.blowoutRisk > 25 ? `High blowout risk (${game.blowoutRisk}%) could impact 4th quarter minutes.` : `High injury impact (${game.injuryImpact}) on roster creates variance.`)}
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 6, marginTop: 24, padding: '12px', background: 'rgba(255,170,0,0.05)', borderRadius: '10px', border: '1px solid rgba(255,170,0,0.1)' }}>
+              <AlertTriangle size={14} style={{ color: 'var(--warning)', marginTop: 2, flexShrink: 0 }} />
+              <span style={{ fontSize: 11, color: 'var(--warning)', lineHeight: 1.5, fontWeight: 500 }}>
+                {p.contextWarning || (game.blowoutRisk > 25 ? `High blowout risk (${game.blowoutRisk}%) could impact minutes.` : `High injury impact (${game.injuryImpact}) on roster creates variance.`)}
               </span>
             </div>
           )}
@@ -129,6 +172,7 @@ function PickCard({ p, game }) {
     </div>
   )
 }
+
 
 function GameCard({ game }) {
   const [expanded, setExpanded] = useState(false)
