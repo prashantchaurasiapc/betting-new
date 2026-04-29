@@ -18,7 +18,7 @@ export default function Picks() {
   const { theme } = useTheme()
 
   const TABS = [
-    {key:'top',         label:'Top Picks',       badge:null},
+    {key:'top',         label:'Top Picks',       badge: 105},
     {key:'recommended', label:'Recommended v1', badge:null},
     {key:'ppslip',      label:'PP Slip β',       badge: slip.length > 0 ? slip.length : null},
     {key:'movers',      label:'Big Movers',      badge:null},
