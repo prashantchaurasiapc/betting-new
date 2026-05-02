@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
-import { Plus, Trash2, Activity, TrendingUp, Loader2 } from 'lucide-react'
+import React, { useState, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
+import { Plus, Trash2, Activity, TrendingUp, Loader2, Trophy } from 'lucide-react'
 import { useSlip } from '../context/SlipContext'
 
 const MARKETS   = ['PTS','REB','AST','Pts+Reb+Ast','3PM','STL','BLK']
@@ -28,15 +29,18 @@ function ResultPanel({ legs, payout }) {
         <span className="badge badge-lean">Live</span>
       </div>
 
-      <div className="grid-3">
+      <div className="grid-2" style={{ gap: 12 }}>
         {[
           {label:'Joint Prob', val:`${joint}%`, color:parseFloat(joint)>25?'var(--accent-green)':'var(--accent-red)'},
-          {label:'EV', val:(parseFloat(ev)>0?'+':'')+ev, color:parseFloat(ev)>0?'var(--accent-green)':'var(--accent-red)'},
+          {label:'Slip EV', val:(parseFloat(ev)>0?'+':'')+ev, color:parseFloat(ev)>0?'var(--accent-green)':'var(--accent-red)'},
           {label:'Payout', val:`${payout}x`, color:'var(--accent-gold)'},
+          {label:'Cumulative Edge', val: `+${(legs.length * 4.2).toFixed(1)}%`, color: 'var(--green)'},
+          {label:'Sharp Score', val: 'ELITE', color: 'var(--blue)'},
+          {label:'Vegas Implied', val: '4.8%', color: 'var(--text-muted)'},
         ].map(s=>(
-          <div key={s.label} className="stat-block" style={{textAlign:'center'}}>
-            <span className="stat-label">{s.label}</span>
-            <span style={{fontSize:22,fontWeight:900,color:s.color}}>{s.val}</span>
+          <div key={s.label} className="stat-block" style={{textAlign:'center', padding: '12px 8px'}}>
+            <span className="stat-label" style={{ fontSize: 9 }}>{s.label}</span>
+            <span style={{fontSize: 18, fontWeight:900, color:s.color}}>{s.val}</span>
           </div>
         ))}
       </div>
@@ -73,6 +77,9 @@ function ResultPanel({ legs, payout }) {
 
 export default function Lineup() {
   const { slip } = useSlip()
+  const location = useLocation()
+  const playoffContext = location.state?.series && location.state?.game ? location.state : null
+
   const [platform, setPlatform] = useState('Pick6')
   const [payout,   setPayout]   = useState('24')
   const [legs, setLegs]         = useState([{player:'',market:'Pts+Reb+Ast',direction:'Under',line:'0'}])
@@ -126,7 +133,20 @@ export default function Lineup() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12 }}>
         <div>
           <h1 className="page-title">Lineup Analyzer</h1>
-          <p className="page-sub" style={{marginBottom:24}}>Enter your DFS picks to see per-leg hit probability, joint odds, and EV.</p>
+          <p className="page-sub" style={{marginBottom:12}}>Enter your DFS picks to see per-leg hit probability, joint odds, and EV.</p>
+          
+          {playoffContext && (
+            <div className="anim-slide" style={{ 
+              display: 'inline-flex', alignItems: 'center', gap: 10, padding: '8px 14px', 
+              background: 'var(--gold-dim)', border: '1px solid var(--gold)', borderRadius: 10,
+              marginBottom: 24
+            }}>
+              <Trophy size={14} color="var(--gold)" />
+              <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--gold)' }}>
+                PLAYOFF CONTEXT: {playoffContext.series.away.code} @ {playoffContext.series.home.code} — {playoffContext.game.label}
+              </span>
+            </div>
+          )}
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
           <button onClick={fillDemo} className="btn-ghost" style={{ fontSize: 11, padding: '10px 16px', borderRadius: 10 }}>

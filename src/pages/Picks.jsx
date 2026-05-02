@@ -7,17 +7,19 @@ import PickDetailDrawer from '../components/picks/PickDetailDrawer'
 
 import PPSlipTab from '../components/picks/PPSlipTab'
 import RecommendedTab from '../components/picks/RecommendedTab'
+import PlayoffBracket from '../components/picks/PlayoffBracket'
 
 import { useSlip } from '../context/SlipContext'
 import { useTheme } from '../context/ThemeContext'
 
 export default function Picks() {
-  const [tab, setTab] = useState('top')
+  const [tab, setTab] = useState('bracket')
   const [selectedPick, setSelectedPick] = useState(null)
   const { slip, togglePick, removePick } = useSlip()
   const { theme } = useTheme()
 
   const TABS = [
+    {key:'bracket',     label:'Playoff Bracket', badge:'NEW'},
     {key:'top',         label:'Top Picks',       badge: 105},
     {key:'recommended', label:'Recommended v1', badge:null},
     {key:'ppslip',      label:'PP Slip β',       badge: slip.length > 0 ? slip.length : null},
@@ -42,6 +44,7 @@ export default function Picks() {
       </div>
 
       <div className="tab-content">
+        {tab === 'bracket' && <PlayoffBracket />}
         {tab === 'top' && (
           <PropsTable 
             data={PLAYER_PROPS} 

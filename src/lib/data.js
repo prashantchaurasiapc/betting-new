@@ -1,13 +1,13 @@
 export const NAV_ITEMS = [
-  { label: 'Slate', path: '/' },
-  { label: 'Top Picks', path: '/picks' },
-  { label: 'Lineup', path: '/lineup' },
-  { label: 'Performance', path: '/performance' },
-  { label: 'Ledger', path: '/ledger' },
-  { label: 'Engine', path: '/engine' },
-  { label: 'Series', path: '/series' },
-  { label: 'Policies', path: '/policies' },
-  { label: 'Pipeline', path: '/pipeline' },
+  { label: 'Slate', path: '/', icon: 'Layout' },
+  { label: 'Top Picks', path: '/picks', icon: 'Target' },
+  { label: 'Lineup', path: '/lineup', icon: 'Shield' },
+  { label: 'Performance', path: '/performance', icon: 'BarChart2' },
+  { label: 'Ledger', path: '/ledger', icon: 'BookOpen' },
+  { label: 'Engine', path: '/engine', icon: 'Zap' },
+  { label: 'Series', path: '/series', icon: 'TrendingUp' },
+  { label: 'Policies', path: '/policies', icon: 'Lock' },
+  { label: 'Pipeline', path: '/pipeline', icon: 'GitPullRequest' },
 ]
 
 export const SLATE_STATS = {
@@ -112,7 +112,7 @@ export const PLAYER_PROPS = [
       { date: '2025-11-14', opponent: 'PHX', home: true, result: 26 }
     ],
     difficulty: 'HOSTILE', move: '-0.98 / 1.00', sharp: 'Sharp', align: 'WITH',
-    defensiveRank: 4, volatility: 2.1, adjProjection: 22.4
+    defensiveRank: 4, volatility: 2.1, adjProjection: 22.4, isCorrelated: true, minutes: 36.2, usage: 31.4
   },
   {
     id: 2, player: 'Cade Cunningham', team: 'DET', matchup: 'DET vs ORL', market: 'PTS', line: 25.5, projection: 19.2, edge: -13.9, score: 14.993, confidence: 'Strong Lean', side: 'UNDER',
@@ -195,7 +195,7 @@ export const PLAYER_PROPS = [
       { date: '2025-12-05', opponent: 'OKC', home: true, result: 24 }
     ],
     difficulty: 'HOSTILE', move: '-0.98 / 1.00', sharp: 'Sharp', align: 'WITH',
-    defensiveRank: 3, volatility: 2.0, adjProjection: 16.8
+    defensiveRank: 3, volatility: 2.0, adjProjection: 16.8, isCorrelated: true, minutes: 38.5, usage: 29.8
   },
   {
     id: 10, player: 'Miles McBride', team: 'NYK', matchup: 'NYK vs ATL', market: 'PTS', line: 6.5, projection: 5.0, edge: -5.5, score: 6.265, confidence: 'Lean', side: 'UNDER',

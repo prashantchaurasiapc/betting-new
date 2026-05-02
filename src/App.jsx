@@ -1,6 +1,7 @@
-import React, { Suspense, lazy } from 'react'
+import React, { Suspense, lazy, useState } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Navbar from './components/layout/Navbar.jsx'
+import Sidebar from './components/layout/Sidebar.jsx'
+import TopBar from './components/layout/TopBar.jsx'
 
 // Lazy load pages for better build performance
 const Slate = lazy(() => import('./pages/Slate.jsx'))
@@ -29,24 +30,38 @@ const PageLoader = () => (
 )
 
 export default function App() {
+  const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
   return (
     <BrowserRouter>
-      <Navbar />
-      <main className="main-content">
-        <Suspense fallback={<PageLoader />}>
-          <Routes>
-            <Route path="/" element={<Slate />} />
-            <Route path="/picks" element={<Picks />} />
-            <Route path="/lineup" element={<Lineup />} />
-            <Route path="/performance" element={<Performance />} />
-            <Route path="/ledger" element={<Ledger />} />
-            <Route path="/engine" element={<Engine />} />
-            <Route path="/series" element={<Series />} />
-            <Route path="/policies" element={<Policies />} />
-            <Route path="/pipeline" element={<Pipeline />} />
-          </Routes>
-        </Suspense>
-      </main>
+      <div className="app-container">
+        <Sidebar 
+          collapsed={collapsed} 
+          setCollapsed={setCollapsed} 
+          mobileOpen={mobileOpen} 
+          setMobileOpen={setMobileOpen} 
+        />
+        
+        <div className={`main-content ${collapsed ? 'sidebar-collapsed' : ''}`}>
+          <TopBar onMenuClick={() => setMobileOpen(true)} />
+          <div className="content-inner">
+            <Suspense fallback={<PageLoader />}>
+              <Routes>
+                <Route path="/" element={<Slate />} />
+                <Route path="/picks" element={<Picks />} />
+                <Route path="/lineup" element={<Lineup />} />
+                <Route path="/performance" element={<Performance />} />
+                <Route path="/ledger" element={<Ledger />} />
+                <Route path="/engine" element={<Engine />} />
+                <Route path="/series" element={<Series />} />
+                <Route path="/policies" element={<Policies />} />
+                <Route path="/pipeline" element={<Pipeline />} />
+              </Routes>
+            </Suspense>
+          </div>
+        </div>
+      </div>
     </BrowserRouter>
   )
 }

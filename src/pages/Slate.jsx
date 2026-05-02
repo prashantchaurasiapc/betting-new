@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import { SLATE_STATS, GAMES, PLAYER_PROPS } from '../lib/data.js'
-import { AlertTriangle, TrendingUp, Clock, Zap, ChevronDown, ChevronUp, BarChart2, Target, History, Activity, TrendingDown, Shield } from 'lucide-react'
+import { AlertTriangle, TrendingUp, Clock, Zap, ChevronDown, ChevronUp, BarChart2, Target, History, Activity, TrendingDown, Shield, Trophy } from 'lucide-react'
 import { useTheme } from '../context/ThemeContext'
 
 function StatCard({ label, value, sub, color }) {
@@ -77,6 +78,16 @@ function PickCard({ p, game }) {
           <p style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', marginTop: 2 }}>{p.market} {p.side} {p.line}</p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          {p.isCorrelated && (
+            <span style={{ 
+              display: 'flex', alignItems: 'center', gap: 4, 
+              background: 'var(--blue-dim)', border: '1px solid var(--blue)', 
+              color: 'var(--blue)', fontSize: 9, fontWeight: 900, 
+              padding: '2px 8px', borderRadius: 6 
+            }}>
+              <Zap size={10} fill="var(--blue)" /> CORRELATED
+            </span>
+          )}
           {p.edge > 10 && <span className="badge badge-strong" style={{ fontSize: 9 }}>HOT</span>}
           <span className={`badge ${p.confidence === 'Strong Lean' ? 'badge-strong' : 'badge-lean'}`}>
             {p.confidence}
@@ -126,6 +137,37 @@ function PickCard({ p, game }) {
           <div style={{ marginTop: 24, display: 'flex', flexDirection: 'column', gap: 24 }}>
             <div style={{ height: '1px', background: 'rgba(255,255,255,0.06)' }} />
             
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 24 }}>
+              {/* Attribution */}
+              <div style={{ padding: '16px', background: 'var(--bg-alpha-02)', borderRadius: 12, border: '1px solid var(--border)' }}>
+                <p style={{ fontSize: 10, fontWeight: 900, color: 'var(--blue)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: 12 }}>Why {p.projection.toFixed(1)}?</p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                  {[
+                    { label: 'Defensive Pressure', val: '-1.4', color: 'var(--accent-red)' },
+                    { label: 'Injury Impact', val: '+0.8', color: 'var(--accent-green)' },
+                    { label: 'Blowout Risk', val: '-0.5', color: 'var(--accent-red)' },
+                  ].map(f => (
+                    <div key={f.label} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11 }}>
+                      <span style={{ color: 'var(--text-muted)' }}>{f.label}</span>
+                      <span style={{ fontWeight: 800, color: f.color }}>{f.val}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Simulation */}
+              <div style={{ padding: '16px', background: 'var(--bg-alpha-02)', borderRadius: 12, border: '1px solid var(--border)' }}>
+                <p style={{ fontSize: 10, fontWeight: 900, color: 'var(--accent-gold)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: 12 }}>Simulation Context</p>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                  <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-primary)' }}>Prob. {p.side}</span>
+                  <span style={{ fontSize: 11, fontWeight: 800, color: 'var(--accent-green)' }}>68.4%</span>
+                </div>
+                <div style={{ width: '100%', height: 6, background: 'var(--border)', borderRadius: 10, overflow: 'hidden' }}>
+                  <div style={{ width: '68.4%', height: '100%', background: 'var(--accent-green)' }} />
+                </div>
+              </div>
+            </div>
+
             {/* 3. Context Summary */}
             <div>
               <p style={{ fontSize: 10, fontWeight: 900, color: isDark ? '#94A3B8' : '#475569', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: 12 }}>Context Summary</p>
@@ -326,9 +368,20 @@ function GameCard({ game }) {
 
 export default function Slate() {
   const s = SLATE_STATS
-  const [filter, setFilter] = useState('All Games')
+  const location = useLocation()
+  const playoffContext = location.state?.series && location.state?.game ? location.state : null
+  
+  const [filter, setFilter] = useState(playoffContext ? 'Playoff Matchup' : 'All Games')
 
   const filteredGames = GAMES.filter(game => {
+    if (playoffContext) {
+      // Filter for the specific playoff matchup if we came from the bracket
+      const homeMatch = game.homeCode === playoffContext.series.home.code || game.homeCode === playoffContext.series.away.code;
+      const awayMatch = game.awayCode === playoffContext.series.home.code || game.awayCode === playoffContext.series.away.code;
+      if (homeMatch && awayMatch) return true;
+      if (filter === 'Playoff Matchup') return false; // If only showing playoff matchup
+    }
+
     if (filter === 'All Games') return true
     if (filter === 'Best Bets') return !!game.bestBet
     if (filter === 'High Edge') return Math.abs(game.modelHomeWin - game.vegasHomeWin) >= 4
@@ -344,6 +397,19 @@ export default function Slate() {
         <div>
           <h1 className="page-title">Today's Slate</h1>
           <p className="page-sub">{s.date} · NBA · Updated {s.lastUpdated}</p>
+          
+          {playoffContext && (
+            <div className="anim-slide" style={{ 
+              display: 'inline-flex', alignItems: 'center', gap: 10, padding: '8px 14px', 
+              background: 'var(--gold-dim)', border: '1px solid var(--gold)', borderRadius: 10,
+              marginTop: 12
+            }}>
+              <Trophy size={14} color="var(--gold)" />
+              <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--gold)' }}>
+                PLAYOFF FOCUS: {playoffContext.series.away.code} @ {playoffContext.series.home.code} — {playoffContext.game.label}
+              </span>
+            </div>
+          )}
         </div>
         <span style={{ display:'flex', alignItems:'center', gap:8 }}>
           <span className="live-dot" />
@@ -370,7 +436,7 @@ export default function Slate() {
 
       {/* Action filter bar */}
       <div style={{ display:'flex', flexWrap:'wrap', gap:8, marginBottom:20, paddingBottom:14, borderBottom:'1px solid var(--border)' }}>
-        {['All Games','Best Bets','High Edge','Late Slate','Injuries'].map((btn) => (
+        {(playoffContext ? ['Playoff Matchup', 'All Games'] : ['All Games','Best Bets','High Edge','Late Slate','Injuries']).map((btn) => (
           <button 
             key={btn} 
             onClick={() => setFilter(btn)}

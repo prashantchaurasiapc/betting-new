@@ -5,7 +5,15 @@ import {
   SignalStrengthItem, 
   MatchupContextBox, 
   L3FormComparison, 
-  HistorySection 
+  HistorySection,
+  ProjectionAttribution,
+  MultiBookOdds,
+  LineMovementHistory,
+  UsageMinutes,
+  ConfidenceDistribution,
+  PublicSharpSplit,
+  AlternateLinesLadder,
+  CalibrationNote
 } from './AnalyticsSections'
 
 export default function PickDetailDrawer({ pick, onClose, onToggleSlip, isInSlip, theme = 'dark' }) {
@@ -117,7 +125,7 @@ export default function PickDetailDrawer({ pick, onClose, onToggleSlip, isInSlip
 
         {/* Quick Stats Bar */}
         <div className="mobile-stack" style={{ padding: '12px 32px', background: isDark ? 'rgba(255,255,255,0.02)' : '#F8FAFC', borderBottom: `1px solid ${isDark ? 'rgba(255,255,255,0.05)' : '#F1F5F9'}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-           <div style={{ fontSize: 12, fontWeight: 600, color: isDark ? '#CBD5E1' : '#64748B' }}>L10 PERFORMANCE: <span style={{ color: isDark ? '#FFFFFF' : '#0F172A', fontWeight: 800 }}>5/10 HITS</span> • AVG 24.1</div>
+           <div style={{ fontSize: 12, fontWeight: 600, color: isDark ? '#CBD5E1' : '#64748B' }}>L10 PERFORMANCE: <span style={{ color: isDark ? '#FFFFFF' : '#0F172A', fontWeight: 800 }}>5/10 {pick.side}S HIT</span> • AVG 24.1</div>
            <div style={{ fontSize: 12, fontWeight: 600, color: isDark ? '#CBD5E1' : '#64748B' }}>{opponent} <span style={{ color: isDark ? '#00D4A1' : '#22C55E', fontWeight: 800 }}>#10 DEFENSE</span></div>
         </div>
 
@@ -160,6 +168,22 @@ export default function PickDetailDrawer({ pick, onClose, onToggleSlip, isInSlip
              theme={theme}
              text={`Opponent allows 109.0 pts/g allowed (P0 softest on today's slate). High defensive pressure expected from primary assignment.`} 
            />
+
+           <CalibrationNote risk={38} theme={theme} />
+
+           <UsageMinutes theme={theme} />
+
+           <ProjectionAttribution pick={pick} theme={theme} />
+
+           <ConfidenceDistribution theme={theme} />
+
+           <PublicSharpSplit theme={theme} />
+
+           <MultiBookOdds line={pick.line} theme={theme} />
+
+           <AlternateLinesLadder line={pick.line} theme={theme} />
+
+           <LineMovementHistory theme={theme} />
 
            <L3FormComparison l3={21.7} l5={19.4} theme={theme} />
 
