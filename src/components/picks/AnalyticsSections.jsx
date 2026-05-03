@@ -6,19 +6,19 @@ import { TrendingUp, TrendingDown, ShieldCheck, Target, Activity, BarChart2, Zap
 export const SignalStrengthItem = ({ label, value, weight, color, icon: Icon, theme = 'dark' }) => {
   const isDark = theme === 'dark';
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '24px 1fr 40px 60px', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+    <div style={{ display: 'grid', gridTemplateColumns: '24px 1fr auto auto', alignItems: 'center', gap: 10, marginBottom: 12 }}>
       <Icon size={14} style={{ color, filter: isDark ? `drop-shadow(0 0 8px ${color}55)` : 'none' }} />
-      <div>
-        <span style={{ fontSize: 13, fontWeight: 700, color: isDark ? '#F8FAFC' : '#0F172A' }}>{label}</span>
-        <span style={{ fontSize: 10, color: isDark ? '#CBD5E1' : '#475569', marginLeft: 6 }}>x{weight.toFixed(2)}</span>
+      <div style={{ minWidth: 0 }}>
+        <p style={{ fontSize: 13, fontWeight: 700, color: isDark ? '#F8FAFC' : '#0F172A', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{label}</p>
+        <span style={{ fontSize: 10, color: isDark ? '#CBD5E1' : '#475569' }}>x{weight.toFixed(2)}</span>
       </div>
-      <div style={{ width: '100%', height: 6, background: isDark ? 'rgba(255,255,255,0.1)' : '#E2E8F0', borderRadius: 10, overflow: 'hidden' }}>
+      <div style={{ width: 40, height: 6, background: isDark ? 'rgba(255,255,255,0.1)' : '#E2E8F0', borderRadius: 10, overflow: 'hidden' }}>
         <div style={{ 
           width: `${value}%`, height: '100%', background: color, borderRadius: 10,
           boxShadow: isDark ? `0 0 12px ${color}aa` : 'none'
         }} />
       </div>
-      <span style={{ fontSize: 13, fontWeight: 800, color: isDark ? '#FFFFFF' : '#0F172A', textAlign: 'right' }}>{value}</span>
+      <span style={{ fontSize: 13, fontWeight: 800, color: isDark ? '#FFFFFF' : '#0F172A', textAlign: 'right', minWidth: 24 }}>{value}</span>
     </div>
   );
 };

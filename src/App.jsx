@@ -35,7 +35,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <div className="app-container">
+      <div className="app-container" style={{ overflowX: 'hidden' }}>
         <Sidebar 
           collapsed={collapsed} 
           setCollapsed={setCollapsed} 
@@ -43,7 +43,7 @@ export default function App() {
           setMobileOpen={setMobileOpen} 
         />
         
-        <div className={`main-content ${collapsed ? 'sidebar-collapsed' : ''}`}>
+        <div className={`main-content ${collapsed ? 'sidebar-collapsed' : ''}`} style={{ overflowX: 'hidden' }}>
           <TopBar onMenuClick={() => setMobileOpen(true)} />
           <div className="content-inner">
             <Suspense fallback={<PageLoader />}>

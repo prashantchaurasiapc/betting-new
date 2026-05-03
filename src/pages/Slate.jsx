@@ -6,10 +6,10 @@ import { useTheme } from '../context/ThemeContext'
 
 function StatCard({ label, value, sub, color }) {
   return (
-    <div className="stat-block" style={{ minWidth: 140 }}>
+    <div className="stat-block" style={{ minWidth: 'calc(50% - 12px)', flex: '1 1 140px' }}>
       <span className="stat-label">{label}</span>
-      <span className="stat-value" style={{ color: color || 'var(--text-primary)', textShadow: color ? `0 0 14px ${color}55` : 'none' }}>{value}</span>
-      {sub && <span className="stat-sub">{sub}</span>}
+      <span className="stat-value" style={{ fontSize: 18, color: color || 'var(--text-primary)', textShadow: color ? `0 0 14px ${color}55` : 'none' }}>{value}</span>
+      {sub && <span className="stat-sub" style={{ fontSize: 9 }}>{sub}</span>}
     </div>
   )
 }
@@ -352,7 +352,7 @@ function GameCard({ game }) {
               <Zap size={12}/> Top Model Picks for this Matchup
             </h4>
             
-            <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(300px,1fr))', gap:16, alignItems: 'flex-start' }}>
+            <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(280px,1fr))', gap:16, alignItems: 'flex-start' }}>
               {picks.length > 0 ? picks.map(p => (
                 <PickCard key={p.id} p={p} game={game} />
               )) : (
@@ -418,7 +418,12 @@ export default function Slate() {
       </div>
 
       {/* Stats strip */}
-      <div className="stats-strip">
+      <div className="stats-strip" style={{ 
+        display: 'grid', 
+        gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+        gap: 12,
+        marginBottom: 24
+      }}>
         <StatCard label="Total Games"   value={s.totalGames}      sub="NBA today"          />
         <StatCard label="Best Edge"     value={s.bestEdge}        sub="vs market"          color="var(--green)" />
         <StatCard label="Top Pick"      value="SGA"               sub="PTS Under 27.5"     color="var(--blue)" />

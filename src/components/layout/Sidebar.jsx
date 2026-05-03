@@ -38,6 +38,7 @@ export default function Sidebar({ collapsed, setCollapsed, mobileOpen, setMobile
               key={item.path}
               to={item.path}
               end={item.path === '/'}
+              onClick={() => setMobileOpen(false)}
               className={({ isActive }) => 'sidebar-nav-link' + (isActive ? ' active' : '')}
               title={collapsed ? item.label : ''}
             >

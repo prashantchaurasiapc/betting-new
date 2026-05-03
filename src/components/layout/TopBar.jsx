@@ -8,22 +8,22 @@ export default function TopBar({ onMenuClick }) {
 
   return (
     <header className="top-bar">
-      <div className="show-mobile" style={{ marginRight: 'auto' }}>
+      <div className="show-mobile" style={{ marginRight: 12 }}>
         <button 
           className="btn-ghost" 
           onClick={onMenuClick} 
           style={{ 
-            width: 40, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center',
-            background: 'var(--bg-alpha-05)', borderRadius: 10
+            width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center',
+            background: 'var(--bg-alpha-05)', borderRadius: 10, padding: 0
           }}
         >
-          <Menu size={20} />
+          <Menu size={18} />
         </button>
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 20, width: '100%', justifyContent: 'flex-end' }}>
         <div className="search-wrap hide-mobile">
-          <input className="input-field" placeholder="Search players, teams..." style={{ width: 240 }} />
+          <input className="input-field" placeholder="Search signals..." style={{ width: 180 }} />
         </div>
 
         <div style={{ position: 'relative' }}>
@@ -74,16 +74,16 @@ export default function TopBar({ onMenuClick }) {
 
         <div style={{ height: 24, width: 1, background: 'var(--border-soft)' }} />
 
-        <button className="btn-ghost" style={{ gap: 10, padding: '4px 12px 4px 4px', borderRadius: 99 }}>
+        <button className="btn-ghost" style={{ gap: 8, padding: '2px 10px 2px 2px', borderRadius: 99 }}>
           <div style={{ 
-            width: 36, height: 36, borderRadius: '50%', 
+            width: 32, height: 32, borderRadius: '50%', 
             background: 'linear-gradient(135deg, var(--blue), var(--blue-hover))',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: '#000', fontWeight: 800, fontSize: 13
+            color: '#000', fontWeight: 800, fontSize: 12
           }}>
             JD
           </div>
-          <span style={{ fontSize: 13, fontWeight: 600 }} className="hide-mobile">John Doe</span>
+          <span style={{ fontSize: 12, fontWeight: 600 }} className="hide-mobile">John Doe</span>
         </button>
       </div>
     </header>

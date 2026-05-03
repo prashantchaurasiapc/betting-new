@@ -58,28 +58,29 @@ export default function PPSlipTab({ slip, onRemove }) {
       </div>
 
       {/* Slip List */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         {slip.map(p => (
-          <div key={p.id} className="card" style={{ 
-            padding: '12px 16px', 
-            display: 'grid', 
-            gridTemplateColumns: '40px 60px 1fr 120px', 
+          <div key={p.id} className="card mobile-stack" style={{ 
+            padding: '16px', 
+            display: 'flex', 
             alignItems: 'center',
+            justifyContent: 'space-between',
             background: 'var(--bg-card)',
             border: '1px solid var(--border-soft)',
-            borderRadius: 12,
-            transition: 'all 0.2s'
+            borderRadius: 14,
+            transition: 'all 0.2s',
+            gap: 16
           }}>
-            {/* Checkbox & Score */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-              <CheckSquare size={18} style={{ color: 'var(--blue)' }} />
-              <span style={{ fontSize: 9, fontWeight: 700, color: 'var(--text-muted)' }}>{Math.round(p.score || 0)}</span>
-            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 16, flex: 1, minWidth: 0 }}>
+              {/* Checkbox & Score */}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+                <CheckSquare size={18} style={{ color: 'var(--blue)' }} />
+                <span style={{ fontSize: 9, fontWeight: 700, color: 'var(--text-muted)' }}>{Math.round(p.score || 0)}</span>
+              </div>
 
-            {/* Market Badge */}
-            <div style={{ paddingLeft: 4 }}>
+              {/* Market Badge */}
               <div style={{ 
-                width: 44, height: 24, borderRadius: 4, 
+                minWidth: 44, height: 24, borderRadius: 4, 
                 background: `${getMarketColor(p.market)}15`, 
                 border: `1px solid ${getMarketColor(p.market)}40`,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -87,52 +88,51 @@ export default function PPSlipTab({ slip, onRemove }) {
               }}>
                 {p.market}
               </div>
-            </div>
 
-            {/* Player Info & Stats Row */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 4, paddingLeft: 8 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ fontSize: 14, fontWeight: 800 }}>{p.player}</span>
-                <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>{p.matchup || p.team}</span>
-              </div>
-              
-              <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                <div style={{ display: 'flex', gap: 8, fontSize: 11 }}>
-                  <span style={{ color: 'var(--text-muted)', fontWeight: 600 }}>PP <span style={{ color: 'var(--text-primary)' }}>{p.line}</span></span>
-                  <span style={{ color: p.side === 'OVER' ? 'var(--green)' : 'var(--error)', fontWeight: 800 }}>L {p.side}</span>
-                  <span style={{ color: 'var(--text-muted)', fontWeight: 600 }}>PROJ <span style={{ color: 'var(--blue)' }}>{p.projection}</span></span>
+              {/* Player Info & Stats Row */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 4, minWidth: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span style={{ fontSize: 15, fontWeight: 800, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.player}</span>
+                  <span style={{ fontSize: 11, color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>{p.matchup || p.team}</span>
                 </div>
                 
-                {/* Tags */}
-                <div style={{ display: 'flex', gap: 6 }}>
-                  {p.sharp === 'Sharp' && <span style={{ fontSize: 9, color: 'var(--green)', background: 'var(--green-dim)', padding: '1px 6px', borderRadius: 3, border: '1px solid var(--green-dim)' }}>Elite</span>}
-                  <span style={{ fontSize: 9, color: 'var(--warning)', background: 'var(--gold-dim)', padding: '1px 6px', borderRadius: 3 }}>Hot</span>
-                  <span style={{ fontSize: 9, color: 'var(--text-muted)', background: 'var(--bg-elevated)', padding: '1px 6px', borderRadius: 3 }}>HOME</span>
-                  {p.difficulty === 'TOUGH' && <span style={{ fontSize: 9, color: 'var(--error)', background: 'rgba(255,77,79,0.1)', padding: '1px 6px', borderRadius: 3 }}>Tough</span>}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+                  <div style={{ display: 'flex', gap: 8, fontSize: 11 }}>
+                    <span style={{ color: 'var(--text-muted)', fontWeight: 600 }}>PP <span style={{ color: 'var(--text-primary)' }}>{p.line}</span></span>
+                    <span style={{ color: p.side === 'OVER' ? 'var(--green)' : 'var(--error)', fontWeight: 800 }}>L {p.side}</span>
+                    <span style={{ color: 'var(--text-muted)', fontWeight: 600 }}>PROJ <span style={{ color: 'var(--blue)' }}>{p.projection}</span></span>
+                  </div>
+                  
+                  {/* Tags */}
+                  <div style={{ display: 'flex', gap: 4 }}>
+                    {p.sharp === 'Sharp' && <span style={{ fontSize: 9, color: 'var(--green)', background: 'var(--green-dim)', padding: '1px 6px', borderRadius: 3 }}>Elite</span>}
+                    <span style={{ fontSize: 9, color: 'var(--warning)', background: 'var(--gold-dim)', padding: '1px 6px', borderRadius: 3 }}>Hot</span>
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* Edge & Action */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4 }}>
-              <div style={{ fontSize: 18, fontWeight: 900, color: p.edge > 0 ? 'var(--green)' : 'var(--error)' }}>
-                {p.edge > 0 ? '+' : ''}{p.edge.toFixed(1)}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ fontSize: 18, fontWeight: 900, color: p.edge > 0 ? 'var(--green)' : 'var(--error)' }}>
+                  {p.edge > 0 ? '+' : ''}{p.edge.toFixed(1)}
+                </div>
+                <div style={{ fontSize: 8, fontWeight: 800, color: 'var(--blue)', background: 'var(--blue-dim)', padding: '1px 4px', borderRadius: 2, display: 'inline-block' }}>
+                  PP EDGE
+                </div>
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span className={`badge ${p.confidence === 'Strong Lean' ? 'badge-strong' : 'badge-lean'}`} style={{ fontSize: 9, padding: '2px 6px' }}>
-                    {p.confidence}
-                  </span>
-                  <button 
-                    onClick={() => onRemove(p.id)}
-                    style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: 4 }}
-                  >
-                    <Trash2 size={14} />
-                  </button>
-                </div>
-                <div style={{ fontSize: 8, fontWeight: 800, color: 'var(--blue)', background: 'var(--blue-dim)', padding: '1px 4px', borderRadius: 2 }}>
-                  PP
-                </div>
+              
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span className={`badge ${p.confidence === 'Strong Lean' ? 'badge-strong' : 'badge-lean'}`} style={{ fontSize: 9, padding: '2px 6px' }}>
+                  {p.confidence}
+                </span>
+                <button 
+                  onClick={() => onRemove(p.id)}
+                  style={{ background: 'var(--bg-elevated)', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: 8, borderRadius: 8 }}
+                >
+                  <Trash2 size={14} />
+                </button>
               </div>
             </div>
           </div>

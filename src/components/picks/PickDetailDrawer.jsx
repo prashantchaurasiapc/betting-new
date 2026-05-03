@@ -72,46 +72,45 @@ export default function PickDetailDrawer({ pick, onClose, onToggleSlip, isInSlip
 
         {/* Top Header Section */}
         <div style={{ 
-          padding: '10px 24px', background: isDark ? 'rgba(255,255,255,0.02)' : '#F8FAFC', borderBottom: `1px solid ${isDark ? 'rgba(255,255,255,0.05)' : '#F1F5F9'}`,
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between'
+          padding: '8px 16px', background: isDark ? 'rgba(255,255,255,0.02)' : '#F8FAFC', borderBottom: `1px solid ${isDark ? 'rgba(255,255,255,0.05)' : '#F1F5F9'}`,
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <span style={{ fontSize: 9, fontWeight: 900, color: '#F59E0B', border: '1px solid #F59E0B', padding: '1px 6px', borderRadius: 4 }}>AGGRESSIVE</span>
-            <span style={{ fontSize: 11, fontWeight: 700, color: isDark ? '#CBD5E1' : '#94A3B8' }}>#1 MODEL PICK</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <span style={{ fontSize: 8, fontWeight: 900, color: '#F59E0B', border: '1px solid #F59E0B', padding: '1px 4px', borderRadius: 4 }}>AGGRESSIVE</span>
+            <span style={{ fontSize: 10, fontWeight: 700, color: isDark ? '#CBD5E1' : '#94A3B8' }}>#1 MODEL PICK</span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span style={{ fontSize: 16 }}>🏀</span>
-            <span style={{ fontSize: 10, fontWeight: 900, color: '#FFFFFF', background: '#22C55E', padding: '3px 10px', borderRadius: 4, boxShadow: isDark ? '0 0 10px rgba(34,197,94,0.4)' : 'none' }}>STRONG LEAN</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ fontSize: 14 }}>🏀</span>
+            <span style={{ fontSize: 9, fontWeight: 900, color: '#FFFFFF', background: '#22C55E', padding: '2px 8px', borderRadius: 4 }}>STRONG LEAN</span>
           </div>
         </div>
 
         {/* Player Profile Header */}
-        <div className="drawer-header-main" style={{ padding: '24px 32px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 20, flex: 1 }}>
+        <div className="drawer-header-main" style={{ padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, flex: 1, minWidth: 0 }}>
              <div style={{ 
-               width: 52, height: 52, borderRadius: '50%', background: isDark ? 'rgba(34,197,94,0.1)' : '#F0FDF4', 
+               width: 44, height: 44, borderRadius: '50%', background: isDark ? 'rgba(34,197,94,0.1)' : '#F0FDF4', 
                border: `2px solid #22C55E`, display: 'flex', alignItems: 'center', justifyContent: 'center',
-               fontSize: 18, fontWeight: 900, color: '#22C55E', flexShrink: 0,
-               boxShadow: isDark ? '0 0 15px rgba(34,197,94,0.2)' : 'none'
+               fontSize: 14, fontWeight: 900, color: '#22C55E', flexShrink: 0
              }}>
                {pick.player.split(' ').map(n => n[0]).join('')}
              </div>
              <div style={{ minWidth: 0 }}>
-               <h2 className="drawer-profile-title" style={{ fontSize: 20, fontWeight: 800, color: isDark ? '#FFFFFF' : '#0F172A', marginBottom: 2, letterSpacing: '-0.3px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{pick.player}</h2>
-               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                 <span style={{ fontSize: 13, color: isDark ? '#CBD5E1' : '#64748B', fontWeight: 500 }}>{pick.team} vs {opponent}</span>
-                 <span style={{ fontSize: 10, background: isDark ? 'rgba(225,29,72,0.1)' : '#FFF1F2', color: '#E11D48', padding: '1px 6px', border: `1px solid ${isDark ? 'rgba(225,29,72,0.2)' : '#FECDD3'}`, borderRadius: 4, fontWeight: 800 }}>HOSTILE</span>
+               <h2 className="drawer-profile-title" style={{ fontSize: 16, fontWeight: 800, color: isDark ? '#FFFFFF' : '#0F172A', marginBottom: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{pick.player}</h2>
+               <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                 <span style={{ fontSize: 11, color: isDark ? '#CBD5E1' : '#64748B', fontWeight: 500 }}>{pick.team} vs {opponent}</span>
+                 <span style={{ fontSize: 9, background: isDark ? 'rgba(225,29,72,0.1)' : '#FFF1F2', color: '#E11D48', padding: '1px 4px', border: `1px solid ${isDark ? 'rgba(225,29,72,0.2)' : '#FECDD3'}`, borderRadius: 4, fontWeight: 800 }}>HOSTILE</span>
                </div>
              </div>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, borderLeft: `1px solid ${isDark ? 'rgba(255,255,255,0.05)' : '#F1F5F9'}`, paddingLeft: 16 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
              <div style={{ textAlign: 'right' }}>
-               <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, justifyContent: 'flex-end' }}>
-                 <span style={{ fontSize: 28, fontWeight: 900, color: isDark ? '#FFFFFF' : '#0F172A', letterSpacing: '-1px' }}>{pick.line}</span>
-                 <span style={{ fontSize: 10, fontWeight: 800, color: isDark ? '#CBD5E1' : '#94A3B8', textTransform: 'uppercase' }}>{pick.market}</span>
+               <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, justifyContent: 'flex-end' }}>
+                 <span style={{ fontSize: 20, fontWeight: 900, color: isDark ? '#FFFFFF' : '#0F172A' }}>{pick.line}</span>
+                 <span style={{ fontSize: 9, fontWeight: 800, color: isDark ? '#CBD5E1' : '#94A3B8', textTransform: 'uppercase' }}>{pick.market}</span>
                </div>
-               <span style={{ fontSize: 12, fontWeight: 700, color: pick.edge > 0 ? (isDark ? '#00D4A1' : '#22C55E') : '#EF4444', background: isDark ? 'rgba(255,255,255,0.05)' : '#F8FAFC', padding: '2px 8px', borderRadius: 6, display: 'inline-block' }}>
+               <span style={{ fontSize: 10, fontWeight: 700, color: pick.edge > 0 ? (isDark ? '#00D4A1' : '#22C55E') : '#EF4444', padding: '1px 6px', borderRadius: 6, display: 'inline-block' }}>
                  {pick.edge > 0 ? '+' : ''}{pick.edge.toFixed(1)} EDGE
                </span>
              </div>
@@ -135,18 +134,22 @@ export default function PickDetailDrawer({ pick, onClose, onToggleSlip, isInSlip
           style={{ padding: '28px 32px 32px', flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 32 }}
         >
            {/* Section: Overview Grid */}
-           <div className="drawer-stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
-              <div style={{ background: isDark ? 'rgba(255,255,255,0.05)' : '#F8FAFC', padding: 16, borderRadius: 20, textAlign: 'center', border: `1px solid ${isDark ? 'rgba(255,255,255,0.15)' : '#F1F5F9'}` }}>
-                <p style={{ fontSize: 10, color: isDark ? '#CBD5E1' : '#94A3B8', fontWeight: 800, marginBottom: 6, textTransform: 'uppercase' }}>5G AVG</p>
-                <p style={{ fontSize: 18, fontWeight: 900, color: isDark ? '#FFFFFF' : '#0F172A' }}>15.6</p>
+           <div className="drawer-stats-grid" style={{ 
+             display: 'grid', 
+             gridTemplateColumns: 'repeat(3, 1fr)', 
+             gap: 8 
+           }}>
+              <div style={{ background: isDark ? 'rgba(255,255,255,0.05)' : '#F8FAFC', padding: 12, borderRadius: 16, textAlign: 'center', border: `1px solid ${isDark ? 'rgba(255,255,255,0.15)' : '#F1F5F9'}` }}>
+                <p style={{ fontSize: 9, color: isDark ? '#CBD5E1' : '#94A3B8', fontWeight: 800, marginBottom: 4, textTransform: 'uppercase' }}>5G AVG</p>
+                <p style={{ fontSize: 16, fontWeight: 900, color: isDark ? '#FFFFFF' : '#0F172A' }}>15.6</p>
               </div>
-              <div style={{ background: isDark ? 'rgba(255,255,255,0.05)' : '#F8FAFC', padding: 16, borderRadius: 20, textAlign: 'center', border: `1px solid ${isDark ? 'rgba(255,255,255,0.15)' : '#F1F5F9'}` }}>
-                <p style={{ fontSize: 10, color: isDark ? '#CBD5E1' : '#94A3B8', fontWeight: 800, marginBottom: 6, textTransform: 'uppercase' }}>MODEL EDGE</p>
-                <p style={{ fontSize: 18, fontWeight: 900, color: '#EF4444' }}>-10.9%</p>
+              <div style={{ background: isDark ? 'rgba(255,255,255,0.05)' : '#F8FAFC', padding: 12, borderRadius: 16, textAlign: 'center', border: `1px solid ${isDark ? 'rgba(255,255,255,0.15)' : '#F1F5F9'}` }}>
+                <p style={{ fontSize: 9, color: isDark ? '#CBD5E1' : '#94A3B8', fontWeight: 800, marginBottom: 4, textTransform: 'uppercase' }}>MODEL EDGE</p>
+                <p style={{ fontSize: 16, fontWeight: 900, color: '#EF4444' }}>-10.9%</p>
               </div>
-              <div style={{ background: isDark ? 'rgba(255,255,255,0.05)' : '#F8FAFC', padding: 16, borderRadius: 20, textAlign: 'center', border: `1px solid ${isDark ? 'rgba(255,255,255,0.15)' : '#F1F5F9'}` }}>
-                <p style={{ fontSize: 10, color: isDark ? '#CBD5E1' : '#94A3B8', fontWeight: 800, marginBottom: 6, textTransform: 'uppercase' }}>WIN PROB</p>
-                <p style={{ fontSize: 18, fontWeight: 900, color: isDark ? '#00D4A1' : '#22C55E' }}>97%</p>
+              <div style={{ background: isDark ? 'rgba(255,255,255,0.05)' : '#F8FAFC', padding: 12, borderRadius: 16, textAlign: 'center', border: `1px solid ${isDark ? 'rgba(255,255,255,0.15)' : '#F1F5F9'}` }}>
+                <p style={{ fontSize: 9, color: isDark ? '#CBD5E1' : '#94A3B8', fontWeight: 800, marginBottom: 4, textTransform: 'uppercase' }}>WIN PROB</p>
+                <p style={{ fontSize: 16, fontWeight: 900, color: isDark ? '#00D4A1' : '#22C55E' }}>97%</p>
               </div>
            </div>
 
