@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react'
-import { Search, Star, ChevronUp, ChevronDown } from 'lucide-react'
+import { Search, Star, ChevronUp, ChevronDown, Activity, Zap, Plus, Trash2, AlertCircle } from 'lucide-react'
+import { SignalStrengthItem, ContextSummaryGrid, RecentFormSection, ConfidenceDistribution } from './AnalyticsSections'
 
 export function ConfBadge({ conf }) {
   const isStrong = conf === 'Strong Lean'
@@ -28,92 +29,182 @@ export function Sparkline({ data }) {
   )
 }
 
-function PropCard({ p, onSelect, onToggleSlip, isInSlip }) {
-  const isOver = p.side === 'OVER'
-  const hits = p.trend.filter(v => isOver ? v > p.line : v < p.line).length
-  const initials = p.player.split(' ').map(n => n[0]).join('').slice(0, 2)
-  const opponent = p.matchup.split(' vs ').find(t => t !== p.team)
+function PropCard({ p: pick, onSelect, onToggleSlip, isInSlip }) {
+  const [expanded, setExpanded] = useState(false);
+  const opponent = pick.matchup.split(' vs ').find(t => t !== pick.team);
+  const confidenceClass = pick.confidence.toLowerCase().replace(' ', '-');
+  const edgeColor = pick.edge < 0 ? 'var(--error)' : 'var(--green)';
 
   return (
-    <div className="glass-card anim-fade" style={{ 
-      padding: 16, 
-      display: 'flex', 
-      flexDirection: 'column', 
-      gap: 16, 
-      position: 'relative',
-      borderTop: `4px solid ${isOver ? 'var(--green)' : 'var(--error)'}`,
-      cursor: 'default'
-    }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span className="badge badge-lean" style={{ fontSize: 9 }}>BALANCED</span>
-          <span style={{ fontSize: 11, fontWeight: 800, color: 'var(--text-muted)' }}>#{p.id % 5 + 1}</span>
-          <div style={{ width: 14, height: 14, borderRadius: '50%', background: 'var(--blue-dim)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-             <Star size={8} fill="var(--blue)" color="var(--blue)" />
-          </div>
+    <div 
+      className={`rec-card-refactored anim-fade ${expanded ? 'is-expanded' : ''}`}
+      style={{ 
+        background: 'var(--bg-card)',
+        border: `1px solid ${expanded ? 'var(--blue)' : 'var(--border)'}`,
+        borderRadius: 24,
+        padding: '20px',
+        position: 'relative',
+        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 20
+      }}
+    >
+      {/* HEADER SECTION */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <div style={{ flex: 1 }}>
+          <h3 style={{ fontSize: 18, fontWeight: 900, color: 'var(--text-primary)', marginBottom: 2 }}>{pick.player}</h3>
+          <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-muted)' }}>
+            {pick.market} {pick.side} {pick.line}
+          </p>
         </div>
-        <span className="badge badge-strong" style={{ fontSize: 10 }}>STRONG</span>
-      </div>
-
-      <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-        <div style={{ 
-          width: 44, height: 44, borderRadius: '50%', 
-          background: 'var(--bg-elevated)', border: '1px solid var(--border)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: 16, fontWeight: 900, color: 'var(--blue)'
-        }}>
-          {initials}
-        </div>
-        <div style={{ minWidth: 0 }}>
-          <h3 style={{ fontSize: 15, fontWeight: 800, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.player}</h3>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>{p.team} vs {opponent}</span>
-            <span className="chip" style={{ fontSize: 9, padding: '1px 6px', background: 'var(--error-dim)', color: 'var(--error)' }}>HOSTILE</span>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6 }}>
+          <div className={`badge badge-${confidenceClass}`} style={{ padding: '3px 10px', fontSize: 9, borderRadius: 6, fontWeight: 900 }}>
+            {pick.confidence.toUpperCase()}
           </div>
         </div>
       </div>
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-        <div>
-          <span style={{ fontSize: 32, fontWeight: 900, color: 'var(--text-primary)' }}>{p.line}</span>
-          <div style={{ fontSize: 10, fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', marginTop: -4 }}>{p.market}</div>
+      {/* 1 — DECISION ROW */}
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: '1fr 1fr 1fr 1.2fr', 
+        gap: 12, 
+        padding: '14px',
+        background: 'rgba(255, 255, 255, 0.02)',
+        borderRadius: 12,
+        border: '1px solid var(--border-soft)'
+      }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <span style={{ fontSize: 9, fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Line</span>
+          <span style={{ fontSize: 16, fontWeight: 900 }}>{pick.line}</span>
         </div>
-        <div style={{ textAlign: 'right' }}>
-           <div style={{ fontSize: 14, fontWeight: 900, color: p.edge > 0 ? 'var(--green)' : 'var(--error)' }}>
-             {p.edge > 0 ? '+' : ''}{p.edge.toFixed(1)} EDGE
-           </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <span style={{ fontSize: 9, fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Proj</span>
+          <span style={{ fontSize: 16, fontWeight: 900, color: edgeColor }}>{pick.projection.toFixed(1)}</span>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <span style={{ fontSize: 9, fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Edge</span>
+          <span style={{ fontSize: 16, fontWeight: 900, color: edgeColor }}>{pick.edge.toFixed(0)}%</span>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <span style={{ fontSize: 9, fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Prob</span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+            <span style={{ fontSize: 16, fontWeight: 900, color: 'var(--blue)', lineHeight: 1 }}>68%</span>
+            <div style={{ width: '100%', height: 3, background: 'var(--bg-alpha-10)', borderRadius: 2, overflow: 'hidden' }}>
+              <div style={{ width: '68%', height: '100%', background: 'var(--blue)' }} />
+            </div>
+          </div>
         </div>
       </div>
 
-      <div style={{ height: '1px', background: 'var(--border-soft)' }} />
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11 }}>
-          <span style={{ color: 'var(--text-muted)' }}>L10: {hits}/10 hits - avg {p.trendL10}</span>
-          <span style={{ fontWeight: 700, color: 'var(--gold)' }}>Risk {Math.floor(Math.random() * 20 + 40)}</span>
+      {/* 2 — DRIVER ROW */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)' }}>Defensive pressure</span>
+          <div style={{ flex: 1, height: 3, background: 'var(--bg-alpha-10)', margin: '0 10px', borderRadius: 2 }}>
+            <div style={{ width: '60%', height: '100%', background: 'var(--error)', marginLeft: '40%' }} />
+          </div>
+          <span style={{ fontSize: 12, fontWeight: 800, color: 'var(--error)' }}>-1.4</span>
         </div>
-        <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>
-          {opponent} <span style={{ color: 'var(--green)', fontWeight: 800 }}>#{p.defensiveRank}/30 def</span> - adj {p.adjProjection}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)' }}>Injury impact</span>
+          <div style={{ flex: 1, height: 3, background: 'var(--bg-alpha-10)', margin: '0 10px', borderRadius: 2 }}>
+            <div style={{ width: '40%', height: '100%', background: 'var(--green)', marginLeft: '20%' }} />
+          </div>
+          <span style={{ fontSize: 12, fontWeight: 800, color: 'var(--green)' }}>+0.8</span>
         </div>
       </div>
 
+      {/* 3 — RISK ROW */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+        <div style={{ background: 'var(--gold-dim)', color: 'var(--gold)', padding: '4px 10px', borderRadius: 99, fontSize: 11, fontWeight: 700, border: '1px solid rgba(212,175,55,0.1)' }}>
+          Blowout 38%
+        </div>
+        <div style={{ background: 'rgba(255,77,79,0.05)', color: 'var(--error)', padding: '4px 10px', borderRadius: 99, fontSize: 11, fontWeight: 700, border: '1px solid rgba(255,77,79,0.1)' }}>
+          Hostile spot
+        </div>
+        <div style={{ background: 'rgba(0,207,255,0.05)', color: 'var(--blue)', padding: '4px 10px', borderRadius: 99, fontSize: 11, fontWeight: 700, border: '1px solid rgba(0,207,255,0.1)' }}>
+          Elite steam
+        </div>
+      </div>
+
+      {/* 4 — EVIDENCE DRAWER */}
+      <div style={{ borderTop: '1px solid var(--border-soft)', paddingTop: 12 }}>
+        <button 
+          onClick={(e) => {
+            e.stopPropagation();
+            setExpanded(!expanded);
+          }}
+          style={{
+            width: '100%', background: 'transparent', border: 'none', color: 'var(--text-muted)',
+            fontSize: 12, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
+            marginBottom: expanded ? 12 : 0
+          }}
+        >
+          {expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+          {expanded ? 'Hide evidence' : 'Show evidence'}
+        </button>
+
+        {expanded && (
+          <div className="anim-slide" style={{ display: 'flex', flexDirection: 'column', gap: 16 }} onClick={e => e.stopPropagation()}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span style={{ fontSize: 9, fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Def</span>
+                <span style={{ fontSize: 13, fontWeight: 900 }}>#{pick.defensiveRank || '4'}</span>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span style={{ fontSize: 9, fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase' }}>L3</span>
+                <span style={{ fontSize: 13, fontWeight: 900 }}>{pick.trendL3 || '28.0'}</span>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span style={{ fontSize: 9, fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase' }}>L5</span>
+                <span style={{ fontSize: 13, fontWeight: 900 }}>{pick.trendL5 || '27.6'}</span>
+              </div>
+            </div>
+            <RecentFormSection 
+              trend={pick.trend.slice(0, 5)} 
+              line={pick.line} 
+              side={pick.side} 
+              market={pick.market} 
+              compact
+            />
+          </div>
+        )}
+      </div>
+
+      {/* ACTIONS */}
       <div style={{ display: 'flex', gap: 8, marginTop: 'auto' }}>
-        <button className="btn-ghost" style={{ flex: 1, padding: '8px', fontSize: 11, fontWeight: 800 }} onClick={() => onToggleSlip(p)}>
-          {isInSlip ? 'Remove' : 'Add Less'}
+        <button 
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleSlip(pick);
+          }}
+          style={{
+            flex: 1, padding: '12px', borderRadius: 12, border: 'none',
+            background: isInSlip ? 'rgba(255, 77, 79, 0.1)' : 'var(--blue)',
+            color: isInSlip ? 'var(--error)' : '#000',
+            fontWeight: 900, fontSize: 13, cursor: 'pointer'
+          }}
+        >
+          {isInSlip ? 'REMOVE' : 'ADD SLIP'}
         </button>
-        <button className="btn-ghost" style={{ flex: 1, padding: '8px', fontSize: 11, fontWeight: 800 }} onClick={() => onToggleSlip(p)}>
-          Add More
+        <button 
+          onClick={(e) => {
+            e.stopPropagation();
+            onSelect(pick);
+          }}
+          style={{
+            padding: '12px', borderRadius: 12, border: '1px solid var(--border)',
+            background: 'var(--bg-secondary)', color: 'var(--text-primary)',
+            fontWeight: 800, fontSize: 13, cursor: 'pointer'
+          }}
+        >
+          DETAILS
         </button>
       </div>
-      
-      <button 
-        onClick={() => onSelect(p)}
-        style={{ width: '100%', background: 'none', border: 'none', padding: 4, color: 'var(--text-muted)', fontSize: 10, fontWeight: 800, cursor: 'pointer', textTransform: 'uppercase', letterSpacing: 1 }}
-      >
-        Details ▾
-      </button>
     </div>
-  )
+  );
 }
 
 const MARKETS = ['All','PTS','REB','AST','PRA','3PM','STL','BLK']
@@ -151,6 +242,31 @@ export default function PropsTable({ data, onSelectPick, selectedPickId }) {
 
   return (
     <div>
+      <style>{`
+        .rec-card-refactored:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+          border-color: var(--blue) !important;
+        }
+        .rec-card-refactored.is-expanded {
+          background: var(--bg-elevated) !important;
+        }
+        @media (min-width: 769px) {
+          .grid-4 {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 24px !important;
+          }
+        }
+        @media (max-width: 768px) {
+          .grid-4 {
+            grid-template-columns: 1fr !important;
+            padding: 0 4px !important;
+          }
+          .rec-card-refactored {
+            padding: 16px !important;
+          }
+        }
+      `}</style>
       <div className="filter-bar">
         <div className="search-wrap" style={{ flex: '1 1 200px' }}>
           <Search size={13} className="search-icon" />

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { createPortal } from 'react-dom'
 import { X, AlertCircle, ShieldCheck, Zap, Trash2, Activity, Target, BarChart2, TrendingUp } from 'lucide-react'
 import { 
@@ -15,10 +15,12 @@ import {
   AlternateLinesLadder,
   CalibrationNote
 } from './AnalyticsSections'
+import BoxScoreTab from './BoxScoreTab'
 
 export default function PickDetailDrawer({ pick, onClose, onToggleSlip, isInSlip, theme = 'dark' }) {
   if (!pick) return null;
 
+  const [tab, setTab] = useState('Analytics');
   const isUnder = pick.side === 'UNDER';
   const opponent = pick.matchup.split(' vs ').find(t => t !== pick.team);
   const isDark = theme === 'dark';
@@ -128,89 +130,114 @@ export default function PickDetailDrawer({ pick, onClose, onToggleSlip, isInSlip
            <div style={{ fontSize: 12, fontWeight: 600, color: isDark ? '#CBD5E1' : '#64748B' }}>{opponent} <span style={{ color: isDark ? '#00D4A1' : '#22C55E', fontWeight: 800 }}>#10 DEFENSE</span></div>
         </div>
 
-        {/* Scrollable Analytics Area */}
+        {/* Tabs Bar */}
+        <div style={{ display: 'flex', background: isDark ? 'rgba(255,255,255,0.02)' : '#F8FAFC', borderBottom: `1px solid ${isDark ? 'rgba(255,255,255,0.05)' : '#F1F5F9'}` }}>
+          {['Analytics', 'Box Score'].map(t => (
+            <button
+              key={t}
+              onClick={() => setTab(t)}
+              style={{
+                flex: 1, padding: '12px', border: 'none', background: 'transparent',
+                color: tab === t ? 'var(--blue)' : 'var(--text-muted)',
+                fontSize: 12, fontWeight: 800, cursor: 'pointer',
+                borderBottom: tab === t ? '2px solid var(--blue)' : '2px solid transparent',
+                transition: 'all 0.2s'
+              }}
+            >
+              {t.toUpperCase()}
+            </button>
+          ))}
+        </div>
+
+        {/* Scrollable Content Area */}
         <div 
           className="custom-scrollbar drawer-content-area"
-          style={{ padding: '28px 32px 32px', flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 32 }}
+          style={{ padding: tab === 'Analytics' ? '28px 32px 32px' : '0', flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 32 }}
         >
-           {/* Section: Overview Grid */}
-           <div className="drawer-stats-grid" style={{ 
-             display: 'grid', 
-             gridTemplateColumns: 'repeat(3, 1fr)', 
-             gap: 8 
-           }}>
-              <div style={{ background: isDark ? 'rgba(255,255,255,0.05)' : '#F8FAFC', padding: 12, borderRadius: 16, textAlign: 'center', border: `1px solid ${isDark ? 'rgba(255,255,255,0.15)' : '#F1F5F9'}` }}>
-                <p style={{ fontSize: 9, color: isDark ? '#CBD5E1' : '#94A3B8', fontWeight: 800, marginBottom: 4, textTransform: 'uppercase' }}>5G AVG</p>
-                <p style={{ fontSize: 16, fontWeight: 900, color: isDark ? '#FFFFFF' : '#0F172A' }}>15.6</p>
-              </div>
-              <div style={{ background: isDark ? 'rgba(255,255,255,0.05)' : '#F8FAFC', padding: 12, borderRadius: 16, textAlign: 'center', border: `1px solid ${isDark ? 'rgba(255,255,255,0.15)' : '#F1F5F9'}` }}>
-                <p style={{ fontSize: 9, color: isDark ? '#CBD5E1' : '#94A3B8', fontWeight: 800, marginBottom: 4, textTransform: 'uppercase' }}>MODEL EDGE</p>
-                <p style={{ fontSize: 16, fontWeight: 900, color: '#EF4444' }}>-10.9%</p>
-              </div>
-              <div style={{ background: isDark ? 'rgba(255,255,255,0.05)' : '#F8FAFC', padding: 12, borderRadius: 16, textAlign: 'center', border: `1px solid ${isDark ? 'rgba(255,255,255,0.15)' : '#F1F5F9'}` }}>
-                <p style={{ fontSize: 9, color: isDark ? '#CBD5E1' : '#94A3B8', fontWeight: 800, marginBottom: 4, textTransform: 'uppercase' }}>WIN PROB</p>
-                <p style={{ fontSize: 16, fontWeight: 900, color: isDark ? '#00D4A1' : '#22C55E' }}>97%</p>
-              </div>
-           </div>
-
-           {/* Section: Signal Strength */}
-           <div>
-             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
-               <div style={{ width: 4, height: 16, background: '#3B82F6', borderRadius: 4 }} />
-               <p style={{ fontSize: 12, fontWeight: 800, color: isDark ? '#F8FAFC' : '#0F172A', textTransform: 'uppercase', letterSpacing: '1px' }}>Signal Strength Breakdown</p>
-             </div>
-             <SignalStrengthItem label="Rolling Avg" value={97} weight={0.30} color="#F97316" icon={BarChart2} theme={theme} />
-             <SignalStrengthItem label="Edge vs Line" value={82} weight={0.25} color="#A855F7" icon={TrendingUp} theme={theme} />
-             <SignalStrengthItem label="Signal Quality" value={70} weight={0.25} color="#00D4A1" icon={Target} theme={theme} />
-             <SignalStrengthItem label="Game Context" value={90} weight={0.20} color="#06B6D4" icon={Zap} theme={theme} />
-           </div>
-
-           {/* Section: Matchup Context */}
-           <MatchupContextBox 
-             status="HOSTILE" 
-             theme={theme}
-             text={`Opponent allows 109.0 pts/g allowed (P0 softest on today's slate). High defensive pressure expected from primary assignment.`} 
-           />
-
-           <CalibrationNote risk={38} theme={theme} />
-
-           <UsageMinutes theme={theme} />
-
-           <ProjectionAttribution pick={pick} theme={theme} />
-
-           <ConfidenceDistribution theme={theme} />
-
-           <PublicSharpSplit theme={theme} />
-
-           <MultiBookOdds line={pick.line} theme={theme} />
-
-           <AlternateLinesLadder line={pick.line} theme={theme} />
-
-           <LineMovementHistory theme={theme} />
-
-           <L3FormComparison l3={21.7} l5={19.4} theme={theme} />
-
-           {/* Section: History Sections */}
-           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-             <HistorySection 
-                title="Recent Form (Last 10)" 
-                trend={pick.trend} 
-                line={pick.line} 
-                side={pick.side} 
-                market={pick.market} 
-                theme={theme}
-             />
-
-             <HistorySection 
-                title={`vs ${opponent} (Past Games)`} 
-                trend={pick.opponentHistory} 
-                line={pick.line} 
-                side={pick.side} 
-                market={pick.market} 
-                opponent={opponent}
-                theme={theme}
-             />
-           </div>
+           {tab === 'Analytics' ? (
+             <>
+               {/* Section: Overview Grid */}
+               <div className="drawer-stats-grid" style={{ 
+                 display: 'grid', 
+                 gridTemplateColumns: 'repeat(3, 1fr)', 
+                 gap: 8 
+               }}>
+                  <div style={{ background: isDark ? 'rgba(255,255,255,0.05)' : '#F8FAFC', padding: 12, borderRadius: 16, textAlign: 'center', border: `1px solid ${isDark ? 'rgba(255,255,255,0.15)' : '#F1F5F9'}` }}>
+                    <p style={{ fontSize: 9, color: isDark ? '#CBD5E1' : '#94A3B8', fontWeight: 800, marginBottom: 4, textTransform: 'uppercase' }}>5G AVG</p>
+                    <p style={{ fontSize: 16, fontWeight: 900, color: isDark ? '#FFFFFF' : '#0F172A' }}>15.6</p>
+                  </div>
+                  <div style={{ background: isDark ? 'rgba(255,255,255,0.05)' : '#F8FAFC', padding: 12, borderRadius: 16, textAlign: 'center', border: `1px solid ${isDark ? 'rgba(255,255,255,0.15)' : '#F1F5F9'}` }}>
+                    <p style={{ fontSize: 9, color: isDark ? '#CBD5E1' : '#94A3B8', fontWeight: 800, marginBottom: 4, textTransform: 'uppercase' }}>MODEL EDGE</p>
+                    <p style={{ fontSize: 16, fontWeight: 900, color: '#EF4444' }}>-10.9%</p>
+                  </div>
+                  <div style={{ background: isDark ? 'rgba(255,255,255,0.05)' : '#F8FAFC', padding: 12, borderRadius: 16, textAlign: 'center', border: `1px solid ${isDark ? 'rgba(255,255,255,0.15)' : '#F1F5F9'}` }}>
+                    <p style={{ fontSize: 9, color: isDark ? '#CBD5E1' : '#94A3B8', fontWeight: 800, marginBottom: 4, textTransform: 'uppercase' }}>WIN PROB</p>
+                    <p style={{ fontSize: 16, fontWeight: 900, color: isDark ? '#00D4A1' : '#22C55E' }}>97%</p>
+                  </div>
+               </div>
+    
+               {/* Section: Signal Strength */}
+               <div>
+                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
+                   <div style={{ width: 4, height: 16, background: '#3B82F6', borderRadius: 4 }} />
+                   <p style={{ fontSize: 12, fontWeight: 800, color: isDark ? '#F8FAFC' : '#0F172A', textTransform: 'uppercase', letterSpacing: '1px' }}>Signal Strength Breakdown</p>
+                 </div>
+                 <SignalStrengthItem label="Rolling Avg" value={97} weight={0.30} color="#F97316" icon={BarChart2} theme={theme} />
+                 <SignalStrengthItem label="Edge vs Line" value={82} weight={0.25} color="#A855F7" icon={TrendingUp} theme={theme} />
+                 <SignalStrengthItem label="Signal Quality" value={70} weight={0.25} color="#00D4A1" icon={Target} theme={theme} />
+                 <SignalStrengthItem label="Game Context" value={90} weight={0.20} color="#06B6D4" icon={Zap} theme={theme} />
+               </div>
+    
+               {/* Section: Matchup Context */}
+               <MatchupContextBox 
+                 status="HOSTILE" 
+                 theme={theme}
+                 text={`Opponent allows 109.0 pts/g allowed (P0 softest on today's slate). High defensive pressure expected from primary assignment.`} 
+               />
+    
+               <CalibrationNote risk={38} theme={theme} />
+    
+               <UsageMinutes theme={theme} />
+    
+               <ProjectionAttribution pick={pick} theme={theme} />
+    
+               <ConfidenceDistribution theme={theme} />
+    
+               <PublicSharpSplit theme={theme} />
+    
+               <MultiBookOdds line={pick.line} theme={theme} />
+    
+               <AlternateLinesLadder line={pick.line} theme={theme} />
+    
+               <LineMovementHistory theme={theme} />
+    
+               <L3FormComparison l3={21.7} l5={19.4} theme={theme} />
+    
+               {/* Section: History Sections */}
+               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                 <HistorySection 
+                    title="Recent Form (Last 10)" 
+                    trend={pick.trend} 
+                    line={pick.line} 
+                    side={pick.side} 
+                    market={pick.market} 
+                    theme={theme}
+                 />
+    
+                 <HistorySection 
+                    title={`vs ${opponent} (Past Games)`} 
+                    trend={pick.opponentHistory} 
+                    line={pick.line} 
+                    side={pick.side} 
+                    market={pick.market} 
+                    opponent={opponent}
+                    theme={theme}
+                 />
+               </div>
+             </>
+           ) : (
+             <BoxScoreTab />
+           )}
         </div>
 
         {/* Footer Action */}

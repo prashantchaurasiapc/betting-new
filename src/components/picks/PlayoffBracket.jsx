@@ -11,8 +11,8 @@ const PLAYOFF_DATA = [
     away: { name: 'PHX Suns', code: 'PHX', seed: 8, score: 1 },
     status: 'Game 5 Tonight',
     games: [
-      { id: 'g1', label: 'Game 1', status: 'Final', homeScore: 118, awayScore: 104, winner: 'OKC' },
-      { id: 'g2', label: 'Game 2', status: 'Final', homeScore: 101, awayScore: 112, winner: 'PHX' },
+      { id: 'g1', label: 'Game 1', status: 'Final', homeScore: 124, awayScore: 118, winner: 'OKC' },
+      { id: 'g2', label: 'Game 2', status: 'Final', homeScore: 102, awayScore: 112, winner: 'PHX' },
       { id: 'g3', label: 'Game 3', status: 'Final', homeScore: 126, awayScore: 109, winner: 'OKC' },
       { id: 'g4', label: 'Game 4', status: 'Final', homeScore: 105, awayScore: 98, winner: 'OKC' },
       { id: 'g5', label: 'Game 5', status: 'Upcoming', time: '7:30 PM ET', live: true },

@@ -317,3 +317,53 @@ export const PL_CURVE = Array.from({ length: 35 }, (_, i) => ({
   day: `Apr ${i + 1}`,
   pl: parseFloat((-21 + i * 0.6 + Math.sin(i * 0.8) * 3).toFixed(2))
 }))
+
+export const BOX_SCORE_DATA = {
+  id: 'por-sas-apr21',
+  teams: {
+    POR: {
+      name: 'Trail Blazers',
+      code: 'POR',
+      score: 106,
+      totals: {
+        fg: '38/89', fgp: '42.7%',
+        tfg: '13/38', tfgp: '34.2%',
+        ft: '17/23', ftp: '73.9%',
+        to: 15, reb: 43, ast: 20, blk: 11, dreb: 28, oreb: 15, pot: 24, pip: 40
+      },
+      players: [
+        { name: 'S. Henderson', pos: 'G', min: 38, pts: 31, reb: 1, ast: 0, stl: 1, blk: 1, plusMinus: 9, fbp: 36.2, scp: 78.9, fg: '11/17', tfg: '5/9', ft: '4/6' },
+        { name: 'R. Williams III', pos: 'C', min: 23, pts: 11, reb: 9, ast: 4, stl: 1, blk: 2, plusMinus: 13, fbp: 36.8, scp: 85.4, fg: '5/6', tfg: '1/2', ft: '0/1' },
+        { name: 'J. Holiday', pos: 'G', min: 39, pts: 16, reb: 5, ast: 9, stl: 1, blk: 2, plusMinus: 12, fbp: 39.5, scp: 44.7, fg: '6/17', tfg: '2/2', ft: '2/2' },
+        { name: 'D. Clingan', pos: 'C', min: 24, pts: 9, reb: 10, ast: 2, stl: 1, blk: 2, plusMinus: -14, fbp: 32, scp: 37.5, fg: '4/12', tfg: '1/6', ft: '0/0' },
+        { name: 'T. Camara', pos: 'F', min: 35, pts: 10, reb: 9, ast: 1, stl: 3, blk: 1, plusMinus: 17, fbp: 34.3, scp: 63.5, fg: '3/7', tfg: '2/5', ft: '2/2' },
+        { name: 'D. Avdija', pos: 'F', min: 30, pts: 14, reb: 4, ast: 3, stl: 0, blk: 1, plusMinus: -1, fbp: 22.3, scp: 46.1, fg: '5/13', tfg: '1/2', ft: '3/5' },
+        { name: 'S. Sharpe', pos: 'G', min: 13, pts: 9, reb: 1, ast: 0, stl: 0, blk: 1, plusMinus: -1, fbp: 13.2, scp: 76.5, fg: '3/5', tfg: '1/3', ft: '2/2' },
+        { name: 'J. Grant', pos: 'F', min: 20, pts: 5, reb: 1, ast: 0, stl: 1, blk: 0, plusMinus: 2, fbp: 9.2, scp: 26.8, fg: '1/8', tfg: '0/2', ft: '3/3' },
+        { name: 'M. Thybulle', pos: 'G', min: 10, pts: 0, reb: 0, ast: 1, stl: 1, blk: 1, plusMinus: -22, fbp: 5.7, scp: 0, fg: '0/3', tfg: '0/2', ft: '0/0' }
+      ]
+    },
+    SAS: {
+      name: 'Spurs',
+      code: 'SAS',
+      score: 103,
+      totals: {
+        fg: '38/86', fgp: '44.2%',
+        tfg: '7/24', tfgp: '29.2%',
+        ft: '20/28', ftp: '71.4%',
+        to: 16, reb: 45, ast: 19, blk: 5, dreb: 33, oreb: 12, pot: 22, pip: 38
+      },
+      players: [
+        { name: 'S. Castle', pos: 'G', min: 38, pts: 18, reb: 7, ast: 5, stl: 2, blk: 1, plusMinus: -1, fbp: 39.9, scp: 40.5, fg: '7/20', tfg: '2/6', ft: '2/5' },
+        { name: 'V. Wembanyama', pos: 'C', min: 34, pts: 16, reb: 12, ast: 2, stl: 3, blk: 1, plusMinus: -1, fbp: 44.4, scp: 11, fg: '3/7', tfg: '5/16', ft: '4/5' },
+        { name: 'D. Vassell', pos: 'F', min: 28, pts: 10, reb: 9, ast: 2, stl: 2, blk: 0, plusMinus: 11, fbp: 28.8, scp: 79.1, fg: '4/5', tfg: '0/0', ft: '2/3' },
+        { name: 'D. Fox', pos: 'G', min: 34, pts: 17, reb: 2, ast: 4, stl: 2, blk: 0, plusMinus: -14, fbp: 28.4, scp: 46.7, fg: '6/16', tfg: '1/3', ft: '4/5' },
+        { name: 'J. Champagnie', pos: 'F', min: 27, pts: 9, reb: 4, ast: 0, stl: 1, blk: 2, plusMinus: -14, fbp: 21.8, scp: 92.2, fg: '3/4', tfg: '2/3', ft: '1/2' },
+        { name: 'K. Johnson', pos: 'F', min: 18, pts: 7, reb: 4, ast: 1, stl: 2, blk: 0, plusMinus: 7, fbp: 18.3, scp: 50, fg: '3/7', tfg: '0/0', ft: '1/3' },
+        { name: 'C. Bryant', pos: 'F', min: 12, pts: 7, reb: 2, ast: 2, stl: 0, blk: 0, plusMinus: -13, fbp: 11.4, scp: 70, fg: '3/5', tfg: '1/2', ft: '0/0' },
+        { name: 'D. Harper', pos: 'G', min: 23, pts: 10, reb: 0, ast: 2, stl: 1, blk: 0, plusMinus: 4, fbp: 13, scp: 63.5, fg: '4/7', tfg: '0/0', ft: '2/2' },
+        { name: 'V. Wembanyama', pos: 'C', min: 12, pts: 5, reb: 4, ast: 1, stl: 0, blk: 1, plusMinus: -7, fbp: 12.3, scp: 52.5, fg: '1/3', tfg: '0/1', ft: '3/4' }
+      ]
+    }
+  }
+}
