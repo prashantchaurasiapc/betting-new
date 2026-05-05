@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { PLAYER_PROPS } from '../../lib/data.js'
 import { Zap, TrendingUp, ShieldCheck, Plus, Trash2, LayoutGrid, List, ChevronUp, ChevronDown, Activity, AlertCircle } from 'lucide-react'
+import { useGame } from '../../context/GameContext'
 
 import { RecentFormSection, OpponentHistorySection, ContextSummaryGrid, ConfidenceDistribution, SignalStrengthItem } from './AnalyticsSections'
 
@@ -214,11 +215,22 @@ function RecommendedCard({ pick, slip, onToggleSlip }) {
 }
 
 export default function RecommendedTab({ slip, onToggleSlip }) {
-  const [view, setView] = useState('cards') // Default to cards as per refactor focus
+  const { activeGame } = useGame();
+  const [view, setView] = useState('table')
 
-  // Filter for high confidence or high edge picks
   const recommendations = PLAYER_PROPS
-    .filter(p => p.confidence === 'Strong Lean' || p.edge > 10)
+    .filter(p => {
+      // High confidence or high edge
+      const isGoodPick = p.confidence === 'Strong Lean' || p.edge > 10;
+      
+      // Filter by Active Game Context if set
+      if (activeGame && activeGame.contextFilters?.seriesCode) {
+        const codes = activeGame.contextFilters.seriesCode.split(/[@|\s|v|s|-]+/).filter(Boolean);
+        return isGoodPick && codes.some(code => p.matchup.includes(code));
+      }
+      
+      return isGoodPick;
+    })
     .sort((a, b) => b.edge - a.edge)
     .slice(0, 10);
 
@@ -298,7 +310,7 @@ export default function RecommendedTab({ slip, onToggleSlip }) {
 
       ) : (
         <div className="card table-wrap anim-fade" style={{ borderRadius: 16, overflow: 'hidden' }}>
-          <table className="dt">
+          <table className="dt table-heavy">
             <thead>
               <tr style={{ background: 'var(--bg-secondary)' }}>
                 <th>PLAYER</th>

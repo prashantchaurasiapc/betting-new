@@ -13,6 +13,7 @@ const Engine = lazy(() => import('./pages/Engine.jsx'))
 const Series = lazy(() => import('./pages/Series.jsx'))
 const Policies = lazy(() => import('./pages/Policies.jsx'))
 const Pipeline = lazy(() => import('./pages/Pipeline.jsx'))
+const GameDetails = lazy(() => import('./pages/GameDetails.jsx'))
 
 // Loading fallback with luxury styling
 const PageLoader = () => (
@@ -57,6 +58,7 @@ export default function App() {
                 <Route path="/series" element={<Series />} />
                 <Route path="/policies" element={<Policies />} />
                 <Route path="/pipeline" element={<Pipeline />} />
+                <Route path="/game/:gameId" element={<GameDetails />} />
               </Routes>
             </Suspense>
           </div>

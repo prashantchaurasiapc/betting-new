@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react'
 import { Search, Star, ChevronUp, ChevronDown, Activity, Zap, Plus, Trash2, AlertCircle } from 'lucide-react'
 import { SignalStrengthItem, ContextSummaryGrid, RecentFormSection, ConfidenceDistribution } from './AnalyticsSections'
+import { useGame } from '../../context/GameContext'
 
 export function ConfBadge({ conf }) {
   const isStrong = conf === 'Strong Lean'
@@ -212,19 +213,28 @@ const SIDES   = ['Both','OVER','UNDER']
 const CONFS   = ['All','Strong Lean','Lean','Marginal','Pass']
 
 export default function PropsTable({ data, onSelectPick, selectedPickId }) {
-  const [market, setMarket] = useState('PTS')
+  const { activeGame } = useGame();
+  const [market, setMarket] = useState('All')
   const [side, setSide]     = useState('Both')
   const [conf, setConf]     = useState('All')
   const [search, setSearch] = useState('')
   const [sortF, setSortF]   = useState('score')
   const [sortD, setSortD]   = useState('desc')
   const [hideLow, setHideLow] = useState(false)
-  const [view, setView] = useState('grid')
+  const [view, setView] = useState('table')
   const [limit, setLimit] = useState(20)
   const [grade, setGrade] = useState('All')
 
   const filtered = useMemo(() => {
     let d = [...data]
+    
+    // Apply Active Game Context Filter
+    if (activeGame && activeGame.contextFilters?.seriesCode) {
+      // Split by common separators: @, vs, -, space
+      const codes = activeGame.contextFilters.seriesCode.split(/[@|\s|v|s|-]+/).filter(Boolean);
+      d = d.filter(p => codes.some(code => p.matchup.includes(code)));
+    }
+
     if (market !== 'All') d = d.filter(p => p.market === market)
     if (side !== 'Both') d = d.filter(p => p.side === side)
     if (conf !== 'All') d = d.filter(p => p.confidence === conf)
@@ -291,7 +301,7 @@ export default function PropsTable({ data, onSelectPick, selectedPickId }) {
       <div className="card" style={{ background: view === 'table' ? 'var(--bg-card)' : 'transparent', border: view === 'table' ? '1px solid var(--border)' : 'none' }}>
         {view === 'table' ? (
           <div className="table-wrap" style={{ margin: 0, border: 'none' }}>
-            <table className="dt">
+            <table className="dt table-heavy">
               <thead><tr>
                 <th>#</th>
                 <th>Player</th>

@@ -32,23 +32,24 @@ export default function Policies() {
         </div>
       )}
 
-      <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',flexWrap:'wrap',gap:12}}>
+      <div className="mobile-stack" style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:16}}>
         <div>
           <h1 className="page-title">Pick Policies</h1>
           <p className="page-sub">As of {lastUpdate} · 8 active policies</p>
         </div>
-        <div style={{display:'flex',gap:8,alignItems:'center'}}>
+        <div style={{display:'flex',gap:8,alignItems:'center',flexWrap:'wrap'}}>
           <label style={{display:'flex',alignItems:'center',gap:6,fontSize:12,color:'var(--text-secondary)',cursor:'pointer'}}>
             <input type="checkbox" style={{accentColor:'var(--accent-blue)'}} defaultChecked />
-            Auto-refresh (30s)
+            <span className="hide-mobile">Auto-refresh (30s)</span>
+            <span className="show-mobile">Auto-refresh</span>
           </label>
           <button 
             onClick={invalidateCache}
             disabled={isClearing}
             className="btn-primary" 
-            style={{fontSize:12,padding:'10px 16px', borderRadius: 10, background: isClearing ? 'var(--bg-secondary)' : 'var(--blue)', color: isClearing ? 'var(--blue)' : '#000'}}
+            style={{fontSize:11,padding:'8px 14px', borderRadius: 10, background: isClearing ? 'var(--bg-secondary)' : 'var(--blue)', color: isClearing ? 'var(--blue)' : '#000'}}
           >
-            {isClearing ? 'Clearing Cache...' : 'Invalidate cache'}
+            {isClearing ? 'Clearing...' : 'Invalidate Cache'}
           </button>
         </div>
       </div>
@@ -60,40 +61,43 @@ export default function Policies() {
               <h2 style={{fontSize:14,fontWeight:700,color:'var(--text-primary)'}}>{p.name}</h2>
               <span className="badge badge-lean">{p.market}</span>
               <span className="chip chip-market">{p.status}</span>
-              <span style={{fontSize:11,color:'var(--text-muted)'}}>topN: —</span>
             </div>
-            <div className="grid-2" style={{gap:24}}>
-              <div>
-                <p style={{fontSize:10,fontWeight:700,textTransform:'uppercase',letterSpacing:'.07em',color:'var(--text-muted)',marginBottom:8}}>Weights</p>
-                <table className="dt">
-                  <thead><tr><th>Signal</th><th style={{textAlign:'right'}}>Weight</th></tr></thead>
-                  <tbody>
-                    {p.weights.map(w=>(
-                      <tr key={w.signal}>
-                        <td style={{color:w.w>0?'var(--accent-blue)':'var(--text-muted)'}}>{w.signal}</td>
-                        <td style={{textAlign:'right',color:w.w>0?'var(--text-primary)':'var(--text-muted)',fontWeight:w.w>0?700:400}}>
-                          {w.w.toFixed(3)}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+            <div className="grid-2" style={{gap:16}}>
+              <div style={{minWidth: 0}}>
+                <p style={{fontSize:10,fontWeight:800,textTransform:'uppercase',letterSpacing:'.07em',color:'var(--text-muted)',marginBottom:10}}>Weights</p>
+                <div className="table-wrap" style={{marginBottom: 0, borderRadius: 10}}>
+                  <table className="dt dt-compact">
+                    <thead><tr><th>Signal</th><th style={{textAlign:'right'}}>Weight</th></tr></thead>
+                    <tbody>
+                      {p.weights.map(w=>(
+                        <tr key={w.signal}>
+                          <td style={{color:w.w>0?'var(--accent-blue)':'var(--text-muted)'}}>{w.signal}</td>
+                          <td style={{textAlign:'right',color:w.w>0?'var(--text-primary)':'var(--text-muted)',fontWeight:w.w>0?700:400}}>
+                            {w.w.toFixed(3)}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
-              <div>
-                <p style={{fontSize:10,fontWeight:700,textTransform:'uppercase',letterSpacing:'.07em',color:'var(--text-muted)',marginBottom:8}}>Thresholds</p>
-                <table className="dt">
-                  <thead><tr><th>Setting</th><th style={{textAlign:'right'}}>Value</th></tr></thead>
-                  <tbody>
-                    {p.thresholds.map(t=>(
-                      <tr key={t.setting}>
-                        <td style={{color:'var(--text-secondary)'}}>{t.setting}</td>
-                        <td style={{textAlign:'right',fontWeight:700,color:t.value===0?'var(--text-muted)':'var(--text-primary)'}}>
-                          {t.value===0?'0 (disabled)':t.value}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+              <div style={{minWidth: 0}}>
+                <p style={{fontSize:10,fontWeight:800,textTransform:'uppercase',letterSpacing:'.07em',color:'var(--text-muted)',marginBottom:10}}>Thresholds</p>
+                <div className="table-wrap" style={{marginBottom: 0, borderRadius: 10}}>
+                  <table className="dt dt-compact">
+                    <thead><tr><th>Setting</th><th style={{textAlign:'right'}}>Value</th></tr></thead>
+                    <tbody>
+                      {p.thresholds.map(t=>(
+                        <tr key={t.setting}>
+                          <td style={{color:'var(--text-secondary)'}}>{t.setting}</td>
+                          <td style={{textAlign:'right',fontWeight:700,color:t.value===0?'var(--text-muted)':'var(--text-primary)'}}>
+                            {t.value===0?'0 (disabled)':t.value}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>

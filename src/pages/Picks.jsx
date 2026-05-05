@@ -11,16 +11,24 @@ import PlayoffBracket from '../components/picks/PlayoffBracket'
 
 import { useSlip } from '../context/SlipContext'
 import { useTheme } from '../context/ThemeContext'
+import { useGame } from '../context/GameContext'
 
 export default function Picks() {
   const [tab, setTab] = useState('bracket')
   const [selectedPick, setSelectedPick] = useState(null)
   const { slip, togglePick, removePick } = useSlip()
   const { theme } = useTheme()
+  const { activeGame } = useGame()
+
+  // Calculate dynamic counts based on active context
+  const filteredPicksCount = activeGame ? PLAYER_PROPS.filter(p => {
+    const codes = activeGame.contextFilters?.seriesCode?.split(/[@|\s|v|s|-]+/).filter(Boolean) || [];
+    return codes.some(code => p.matchup.includes(code));
+  }).length : PLAYER_PROPS.length;
 
   const TABS = [
     {key:'bracket',     label:'Playoff Bracket', badge:'NEW'},
-    {key:'top',         label:'Top Picks',       badge: 105},
+    {key:'top',         label:'Top Picks',       badge: filteredPicksCount},
     {key:'recommended', label:'Recommended v1', badge:null},
     {key:'ppslip',      label:'PP Slip β',       badge: slip.length > 0 ? slip.length : null},
     {key:'movers',      label:'Big Movers',      badge:null},
